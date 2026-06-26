@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -570,11 +570,11 @@
   <div id="ftw-footer">
     <button id="ftw-btn-atras">
       <svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-      Volver
+      Paso anterior
     </button>
     <button id="ftw-btn-reiniciar">
       <svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-      Reiniciar
+      Reiniciar asistente
     </button>
   </div>
 
@@ -876,7 +876,7 @@ const ARBOL = {
     pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Primero verás 'Enviando por FTP...' durante unos segundos. ¿Después aparece el mensaje 'Enviado con éxito'?",
     incluirNinguna: false,
     opciones: [
-      { texto: "Sí, enviado con éxito",          destino: "instalar_cherokee_final"      },
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_cherokee_instalar" },
       { texto: "No, da error o se queda colgado", destino: "problema_no_envia_cobertura" }
     ]
   },
@@ -960,7 +960,7 @@ const ARBOL = {
     pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Primero verás 'Enviando por FTP...' durante unos segundos. ¿Después aparece el mensaje 'Enviado con éxito'?",
     incluirNinguna: false,
     opciones: [
-      { texto: "Sí, enviado con éxito",          destino: "envio_cherokee_final"   },
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_cherokee_envio"    },
       { texto: "No, da error o no hay cobertura", destino: "instalar_cherokee_apn" }
     ]
   },
@@ -1119,7 +1119,7 @@ const ARBOL = {
     pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Verás 'Enviando por FTP...' unos segundos. ¿Después aparece 'Enviado con éxito'?",
     incluirNinguna: false,
     opciones: [
-      { texto: "Sí, enviado con éxito",          destino: "instalar_apache_final"        },
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_apache_instalar"   },
       { texto: "No, da error o se queda colgado", destino: "problema_no_envia_cobertura" }
     ]
   },
@@ -1198,7 +1198,7 @@ const ARBOL = {
     pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. ¿Aparece el mensaje 'Enviado con éxito'?",
     incluirNinguna: false,
     opciones: [
-      { texto: "Sí, enviado con éxito",          destino: "envio_apache_final"   },
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_apache_envio"      },
       { texto: "No, da error o no hay cobertura", destino: "instalar_apache_apn" }
     ]
   },
@@ -1512,6 +1512,53 @@ const ARBOL = {
         causas: "Hay un límite de envíos diarios configurado en el menú (útil para ahorrar datos, pero puede ser muy bajo).",
         solucion: "Ve a <strong>Menú → Red → Max Núm/Día</strong> y sube el número al que necesites, o ponlo en <em>ilimitado</em>. Las fotos tomadas después del límite se siguen guardando en la SD; solo se dejaron de enviar."
       }
+    ]
+  },
+
+  // ================================================================
+  // VERIFICACIÓN DE RECEPCIÓN EN APP — compartida entre instalación y envío
+  // ================================================================
+  verificar_foto_cherokee_instalar: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Cherokee?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",         destino: "instalar_cherokee_final" },
+      { texto: "No, no aparece ninguna foto",   destino: "soporte_directo"         }
+    ]
+  },
+
+  verificar_foto_apache_instalar: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Apache?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",         destino: "instalar_apache_final" },
+      { texto: "No, no aparece ninguna foto",   destino: "soporte_directo"       }
+    ]
+  },
+
+  verificar_foto_cherokee_envio: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Cherokee?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",         destino: "envio_cherokee_final" },
+      { texto: "No, no aparece ninguna foto",   destino: "soporte_directo"      }
+    ]
+  },
+
+  verificar_foto_apache_envio: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Apache?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",         destino: "envio_apache_final"  },
+      { texto: "No, no aparece ninguna foto",   destino: "soporte_directo"     }
     ]
   },
 
