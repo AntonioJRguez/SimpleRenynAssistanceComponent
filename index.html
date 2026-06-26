@@ -576,7 +576,7 @@
       <svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
       Asistente de instalación y configuración
     </span>
-    <a id="ftw-soporte-fijo" href="#" target="_blank" rel="noopener">
+    <a id="ftw-soporte-fijo" href="javascript:void(0)" rel="noopener">
       <svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
       ¿Necesitas ayuda?
     </a>
@@ -1764,7 +1764,7 @@ function htmlContacto(oculto){
       <br><br>
       Si aun así sigues sin resolverlo, contáctanos y te ayudamos personalmente:
       <br><br>
-      ${icon("mensaje")}<a href="${CONFIG.whatsapp}" target="_blank" rel="noopener">WhatsApp</a><br>
+      ${icon("mensaje")}<a href="javascript:void(0)">WhatsApp</a><br>
       ${icon("correo")}<a href="mailto:${CONFIG.email}">${CONFIG.email}</a>
       <br>
       <button class="ftw-btn-reiniciar-grande" id="ftw-reiniciar-desde-contacto">${icon("reiniciar")}Empezar de nuevo</button>
@@ -1943,7 +1943,7 @@ function renderizar(){
 }
 
 /* Inicialización */
-document.getElementById("ftw-soporte-fijo").href = CONFIG.whatsapp;
+// document.getElementById("ftw-soporte-fijo").href = CONFIG.whatsapp;
 btnAtras.addEventListener("click", volverAtras);
 btnReiniciar.addEventListener("click", reiniciar);
 renderizar();
