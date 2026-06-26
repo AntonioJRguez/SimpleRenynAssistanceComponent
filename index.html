@@ -223,6 +223,27 @@
     transform: none;
   }
 
+  /* Separador visual antes del botón de errores en el inicio */
+  .ftw-sep-errores {
+    margin-top: 20px;
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .ftw-btn-errores {
+    margin-top: 4px;
+    background: transparent;
+    border-color: var(--red-border);
+    color: var(--text-2);
+    font-weight: 500;
+  }
+  .ftw-btn-errores:hover {
+    background: var(--red-bg);
+    border-color: var(--red-border);
+    color: var(--text);
+    transform: none;
+  }
+  .ftw-btn-errores .ftw-icon { color: var(--red-h); flex-shrink: 0; }
+
   /* Botón "Siguiente" (CTA principal en pasos) */
   .ftw-btn-siguiente {
     background: var(--red);
@@ -671,13 +692,38 @@ const ARBOL = {
       { texto: "Instalar mi cámara",                          destino: "instalar_modelo" },
       { texto: "Configurar conexión",                         destino: "conexion_modelo" },
       { texto: "Configurar envío de fotos (App Renyn Systems)", destino: "envio_modelo"  },
-      { texto: "Tengo un problema / no funciona",             destino: "problema_tipo"   }
-    ]
+      { texto: "Tengo un problema / no funciona",             destino: "problema_modelo"  }
+    ],
+    opcionAlerta: { texto: "Ver los códigos de error más comunes", destino: "errores_modelo" }
   },
 
   // ================================================================
   // SELECCIÓN DE MODELO
   // ================================================================
+  problema_modelo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Modelo",
+    pregunta: "¿Qué modelo de cámara tienes?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Cherokee", destino: "problema_tipo"   },
+      { texto: "Apache",   destino: "soporte_directo" },
+      { texto: "Creek",    destino: "soporte_directo" }
+    ]
+  },
+
+  errores_modelo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Modelo",
+    pregunta: "¿Qué modelo de cámara tienes?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Cherokee", destino: "errores_cherokee" },
+      { texto: "Apache",   destino: "soporte_directo"  },
+      { texto: "Creek",    destino: "soporte_directo"  }
+    ]
+  },
+
   instalar_modelo: {
     tipo: "pregunta",
     breadcrumbLabel: "Instalar cámara",
@@ -1651,7 +1697,8 @@ const ICONOS = {
   cruz:         '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
   mensaje:      '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
   correo:       '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
-  fiesta:       '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>'
+  fiesta:       '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>',
+  alerta:       '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>'
 };
 
 function icon(nombre, extraClass){
@@ -1736,6 +1783,10 @@ function renderizarPregunta(nodo){
   if(nodo.incluirNinguna){
     html += `<button class="ftw-btn ftw-btn-ninguna" data-ninguna><span>Ninguna de las anteriores</span><span class="ftw-btn-chevron">›</span></button>`;
   }
+  if(nodo.opcionAlerta){
+    html += `<hr class="ftw-sep-errores">`;
+    html += `<button class="ftw-btn ftw-btn-errores" data-alerta>${icon("alerta")}<span>${nodo.opcionAlerta.texto}</span><span class="ftw-btn-chevron">›</span></button>`;
+  }
   html += `</div>`;
   elBody.innerHTML = html;
 
@@ -1746,6 +1797,10 @@ function renderizarPregunta(nodo){
   const btnNinguna = elBody.querySelector(".ftw-btn[data-ninguna]");
   if(btnNinguna){
     btnNinguna.addEventListener("click", () => irANodo(resolverDestino(nodo.ningunaDestino), "Ninguna de las anteriores"));
+  }
+  const btnAlerta = elBody.querySelector(".ftw-btn[data-alerta]");
+  if(btnAlerta){
+    btnAlerta.addEventListener("click", () => irANodo(resolverDestino(nodo.opcionAlerta.destino), nodo.opcionAlerta.texto));
   }
 }
 
