@@ -904,7 +904,7 @@ const ARBOL = {
     pregunta: "En modo SETUP, ¿la pantalla muestra las barras de cobertura 4G sin ningún mensaje de error?",
     incluirNinguna: false,
     opciones: [
-      { texto: "Sí, hay cobertura 4G",               destino: "conexion_cherokee_final" },
+      { texto: "Sí, hay cobertura 4G",               destino: "conexion_cherokee_prueba" },
       { texto: "No, aparece 'Error de detección SIM'", destino: "conexion_cherokee_apn" }
     ]
   },
@@ -919,8 +919,19 @@ const ARBOL = {
         <li>Introduce el <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Access_Point_Name" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu proveedor.</li>
       </ul>`,
     imagen: "", manualUrl: "", manualTexto: "",
-    siguiente: "conexion_cherokee_final",
+    siguiente: "conexion_cherokee_prueba",
     textoBoton: "APN configurado, siguiente"
+  },
+
+  conexion_cherokee_prueba: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Prueba de envío",
+    pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Verás 'Enviando por FTP...' unos segundos. ¿Después aparece el mensaje 'Enviado con éxito'?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_cherokee_conexion" },
+      { texto: "No, da error o se queda colgado", destino: "soporte_directo"                 }
+    ]
   },
 
   conexion_cherokee_final: {
@@ -1149,7 +1160,7 @@ const ARBOL = {
     pregunta: "En modo SETUP, ¿la pantalla muestra las barras de cobertura 4G sin ningún mensaje de error?",
     incluirNinguna: false,
     opciones: [
-      { texto: "Sí, hay cobertura 4G",               destino: "conexion_apache_final" },
+      { texto: "Sí, hay cobertura 4G",               destino: "conexion_apache_prueba" },
       { texto: "No, aparece error de detección SIM",  destino: "conexion_apache_apn"  }
     ]
   },
@@ -1164,8 +1175,19 @@ const ARBOL = {
         <li>Introduce el <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Access_Point_Name" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu operadora.</li>
       </ul>`,
     imagen: "", manualUrl: "", manualTexto: "",
-    siguiente: "conexion_apache_final",
+    siguiente: "conexion_apache_prueba",
     textoBoton: "APN configurado, siguiente"
+  },
+
+  conexion_apache_prueba: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Prueba de envío",
+    pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Verás 'Enviando por FTP...' unos segundos. ¿Después aparece el mensaje 'Enviado con éxito'?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_apache_conexion" },
+      { texto: "No, da error o se queda colgado", destino: "soporte_directo"               }
+    ]
   },
 
   conexion_apache_final: {
@@ -1516,8 +1538,30 @@ const ARBOL = {
   },
 
   // ================================================================
-  // VERIFICACIÓN DE RECEPCIÓN EN APP — compartida entre instalación y envío
+  // VERIFICACIÓN DE RECEPCIÓN EN APP
   // ================================================================
+  verificar_foto_cherokee_conexion: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Cherokee?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",       destino: "conexion_cherokee_final" },
+      { texto: "No, no aparece ninguna foto", destino: "soporte_directo"         }
+    ]
+  },
+
+  verificar_foto_apache_conexion: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Apache?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",       destino: "conexion_apache_final" },
+      { texto: "No, no aparece ninguna foto", destino: "soporte_directo"       }
+    ]
+  },
+
   verificar_foto_cherokee_instalar: {
     tipo: "pregunta",
     breadcrumbLabel: "Verificar app",
