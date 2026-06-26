@@ -1,0 +1,3 @@
+# Ignorar una carpeta entera (y todo su contenido)
+salidas-maker/
+.claude/
