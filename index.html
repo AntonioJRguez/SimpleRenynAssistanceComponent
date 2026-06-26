@@ -685,8 +685,8 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Cherokee", destino: "instalar_cherokee_hw_abrir"  },
-      { texto: "Apache",   destino: "pendiente_apache_instalar"  },
-      { texto: "Creek",    destino: "pendiente_creek_instalar"   }
+      { texto: "Apache",   destino: "instalar_apache_hw_abrir"  },
+      { texto: "Creek",    destino: "instalar_creek_abrir"       }
     ]
   },
 
@@ -697,7 +697,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Cherokee", destino: "conexion_cherokee_inicio"   },
-      { texto: "Apache",   destino: "pendiente_apache_conexion"  },
+      { texto: "Apache",   destino: "conexion_apache_inicio"    },
       { texto: "Creek",    destino: "conexion_creek_sin_internet"}
     ]
   },
@@ -709,7 +709,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Cherokee", destino: "envio_cherokee_vincular"    },
-      { texto: "Apache",   destino: "pendiente_apache_envio"     },
+      { texto: "Apache",   destino: "envio_apache_vincular"      },
       { texto: "Creek",    destino: "envio_creek_sin_app"        }
     ]
   },
@@ -980,14 +980,297 @@ const ARBOL = {
   },
 
   // ================================================================
-  // RAMAS PENDIENTES — Apache (instalación, conexión, envío) y Creek
-  // (instalación). Para completarlas: cambia "tipo" a "paso"/"final"
-  // y rellena el contenido.
+  // RAMA APACHE — INSTALACIÓN COMPLETA
   // ================================================================
-  pendiente_apache_instalar:  { tipo: "pendiente", breadcrumbLabel: "Apache - Instalación"    },
-  pendiente_creek_instalar:   { tipo: "pendiente", breadcrumbLabel: "Creek - Instalación"     },
-  pendiente_apache_conexion:  { tipo: "pendiente", breadcrumbLabel: "Apache - Conexión"       },
-  pendiente_apache_envio:     { tipo: "pendiente", breadcrumbLabel: "Apache - Envío de fotos" },
+
+  // -- Hardware: paso 1/4 — Abrir --
+  instalar_apache_hw_abrir: {
+    tipo: "paso",
+    fase: "Fase 1 de 3 — Preparación del hardware",
+    breadcrumbLabel: "Hardware (1/4) — Abrir",
+    texto: `<strong>Paso 1 de 4 — Abre la cámara</strong><br><br>
+      Tira con cuidado de los <strong>cierres laterales</strong> para abrir la carcasa.<br><br>
+      Ten a mano todo lo que necesitas: <strong>tarjeta SIM, tarjeta SD, pilas AA y la antena</strong>.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_hw_sim",
+    textoBoton: "Cámara abierta, siguiente"
+  },
+
+  // -- Hardware: paso 2/4 — SIM --
+  instalar_apache_hw_sim: {
+    tipo: "paso",
+    fase: "Fase 1 de 3 — Preparación del hardware",
+    breadcrumbLabel: "Hardware (2/4) — SIM",
+    texto: `<strong>Paso 2 de 4 — Tarjeta SIM</strong><br><br>
+      Si la SIM viene en un tarjetón más grande, <strong>extráela de su marco</strong> presionando suavemente hasta que salga.<br><br>
+      Inserta la SIM en la <strong>ranura lateral</strong> de la cámara hasta que encaje. Si es de Renyn la conexión será automática; con otro operador, configuraremos el APN más adelante.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_hw_sd",
+    textoBoton: "SIM insertada, siguiente"
+  },
+
+  // -- Hardware: paso 3/4 — SD --
+  instalar_apache_hw_sd: {
+    tipo: "paso",
+    fase: "Fase 1 de 3 — Preparación del hardware",
+    breadcrumbLabel: "Hardware (3/4) — SD",
+    texto: `<strong>Paso 3 de 4 — Tarjeta SD</strong><br><br>
+      La Apache admite tarjetas SD de <strong>hasta 128 GB</strong>. Inserta la tarjeta en la ranura inferior.<br><br>
+      Debe estar formateada en <strong>FAT32</strong> (tarjetas de hasta 32 GB) o en <strong>exFAT</strong> (su formato de fábrica para las de 64 GB o más).<br><br>
+      Si la tarjeta tiene <strong>pestaña de bloqueo</strong>, asegúrate de que está en posición desbloqueada antes de insertarla.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_hw_pilas",
+    textoBoton: "SD insertada, siguiente"
+  },
+
+  // -- Hardware: paso 4/4 — Pilas, antena y cierre --
+  instalar_apache_hw_pilas: {
+    tipo: "paso",
+    fase: "Fase 1 de 3 — Preparación del hardware",
+    breadcrumbLabel: "Hardware (4/4) — Pilas y antena",
+    texto: `<strong>Paso 4 de 4 — Pilas, cierre y antena</strong><br><br>
+      <strong>1.</strong> Coloca las <strong>pilas AA</strong> en el compartimento respetando la polaridad marcada (los símbolos + y – en la carcasa). Usa pilas alcalinas o NiMH recargables de buena calidad; no mezcles nuevas con usadas.<br><br>
+      <strong>2.</strong> Cierra la carcasa asegurando los cierres laterales.<br><br>
+      <strong>3.</strong> Retira el protector de la <strong>antena</strong> y enróscala en la parte superior de la cámara. <strong>No enciendas la cámara sin la antena</strong>, podrías dañar el módulo de transmisión.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_descargar_app",
+    textoBoton: "Hardware listo, siguiente"
+  },
+
+  // -- App: descarga --
+  instalar_apache_descargar_app: {
+    tipo: "paso",
+    fase: "Fase 2 de 3 — Descarga de la aplicación",
+    breadcrumbLabel: "App — Descarga",
+    texto: `<strong>Descarga la app Renyn</strong><br><br>
+      Abre la tienda de tu móvil (<strong>App Store</strong> en iPhone o <strong>Google Play</strong> en Android), busca <strong>Renyn</strong> y descárgala. Es la misma aplicación que para la Cherokee.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_app",
+    textoBoton: "App instalada, siguiente"
+  },
+
+  // -- Vincular: paso 1/3 — SETUP --
+  instalar_apache_app: {
+    tipo: "paso",
+    fase: "Fase 3 de 3 — Vinculación con la app",
+    breadcrumbLabel: "Vincular (1/3) — SETUP",
+    texto: `<strong>Paso 1 de 3 — Pon la cámara en modo SETUP</strong><br><br>
+      Desliza el interruptor a la posición <strong>SETUP</strong> y espera a que aparezca la imagen en la pantalla de la cámara.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_app_menu",
+    textoBoton: "Pantalla encendida, siguiente"
+  },
+
+  // -- Vincular: paso 2/3 — Menú --
+  instalar_apache_app_menu: {
+    tipo: "paso",
+    fase: "Fase 3 de 3 — Vinculación con la app",
+    breadcrumbLabel: "Vincular (2/3) — Menú",
+    texto: `<strong>Paso 2 de 3 — Accede al menú de instalación</strong><br><br>
+      Pulsa el botón <strong>MENU</strong> en la cámara, navega hasta la pestaña <strong>CAM</strong> y selecciona la opción <strong>Instalar</strong>.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_app_qr",
+    textoBoton: "Opción seleccionada, siguiente"
+  },
+
+  // -- Vincular: paso 3/3 — QR --
+  instalar_apache_app_qr: {
+    tipo: "paso",
+    fase: "Fase 3 de 3 — Vinculación con la app",
+    breadcrumbLabel: "Vincular (3/3) — QR",
+    texto: `<strong>Paso 3 de 3 — Escanea el código QR</strong><br><br>
+      La cámara mostrará un <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/C%C3%B3digo_QR" target="_blank" rel="noopener">código QR</a> en pantalla. Abre la app Renyn en tu móvil, pulsa <strong>"Añadir cámara"</strong> y escanéalo para completar el registro.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_red",
+    textoBoton: "Cámara vinculada, siguiente"
+  },
+
+  // -- Red --
+  instalar_apache_red: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Red",
+    pregunta: "En modo SETUP, ¿la pantalla muestra las barras de cobertura 4G sin ningún mensaje de error?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, hay cobertura 4G",               destino: "instalar_apache_prueba" },
+      { texto: "No, aparece error de detección SIM",  destino: "instalar_apache_apn"   }
+    ]
+  },
+
+  // -- APN manual --
+  instalar_apache_apn: {
+    tipo: "paso",
+    breadcrumbLabel: "APN manual",
+    texto: `Configura la red manualmente:
+      <ul>
+        <li>Ve a <strong>Red → SIM Detección Auto → Manual</strong>.</li>
+        <li>Entra en <strong>SIM Config. Manual → 4G</strong>.</li>
+        <li>Introduce el <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Access_Point_Name" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu operadora.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_prueba",
+    textoBoton: "APN configurado, siguiente"
+  },
+
+  // -- Prueba de envío --
+  instalar_apache_prueba: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Prueba de envío",
+    pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Verás 'Enviando por FTP...' unos segundos. ¿Después aparece 'Enviado con éxito'?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, enviado con éxito",          destino: "instalar_apache_final"        },
+      { texto: "No, da error o se queda colgado", destino: "problema_no_envia_cobertura" }
+    ]
+  },
+
+  // -- Final --
+  instalar_apache_final: {
+    tipo: "final",
+    breadcrumbLabel: "Activar",
+    resultadoTexto: `¡Última fase! Desliza el interruptor a la posición <strong>ON</strong>. La cámara quedará lista para disparar por detección de movimiento.<br><br>
+      Desde la app puedes ajustar cuando quieras:
+      <ul>
+        <li><strong>Calidad de imagen:</strong> 8, 16 o 24 MP.</li>
+        <li><strong>Vídeo:</strong> hasta 2,7K a 30 FPS — la mejor resolución de vídeo de la gama Renyn.</li>
+        <li><strong>Velocidad de disparo:</strong> 0,2 segundos — la más rápida de las tres cámaras.</li>
+        <li><strong>Flash LED:</strong> 28 LEDs infrarrojos invisibles (940 nm), alcance de hasta 20 metros.</li>
+      </ul>
+      <strong>Consejo:</strong> Si usas pilas recargables NiMH, ve a <strong>Menú → Otros → Pilas</strong> y selecciona "Recargable" para que la cámara calcule bien el nivel de batería.`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA APACHE — CONFIGURAR CONEXIÓN
+  // ================================================================
+  conexion_apache_inicio: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Conexión Apache",
+    pregunta: "En modo SETUP, ¿la pantalla muestra las barras de cobertura 4G sin ningún mensaje de error?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, hay cobertura 4G",               destino: "conexion_apache_final" },
+      { texto: "No, aparece error de detección SIM",  destino: "conexion_apache_apn"  }
+    ]
+  },
+
+  conexion_apache_apn: {
+    tipo: "paso",
+    breadcrumbLabel: "APN manual",
+    texto: `Configura la red manualmente:
+      <ul>
+        <li>Ve a <strong>Red → SIM Detección Auto → Manual</strong>.</li>
+        <li>Entra en <strong>SIM Config. Manual → 4G</strong>.</li>
+        <li>Introduce el <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Access_Point_Name" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu operadora.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "conexion_apache_final",
+    textoBoton: "APN configurado, siguiente"
+  },
+
+  conexion_apache_final: {
+    tipo: "final",
+    breadcrumbLabel: "Conectada",
+    resultadoTexto: "Tu cámara Apache ya tiene conexión 4G activa. Compruébalo pulsando OK en modo SETUP: si aparece 'Enviado con éxito', la transmisión funciona correctamente.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA APACHE — CONFIGURAR ENVÍO DE FOTOS
+  // ================================================================
+  envio_apache_vincular: {
+    tipo: "paso",
+    breadcrumbLabel: "Vincular app",
+    texto: `Para enviar fotos a la app Renyn, la cámara debe estar vinculada:
+      <ul>
+        <li>Pon el interruptor en posición <strong>SETUP</strong>.</li>
+        <li>Pulsa <strong>MENU → CAM → Instalar</strong>.</li>
+        <li>Escanea el <strong>código QR</strong> que aparece en pantalla desde la app Renyn ("Añadir cámara").</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "envio_apache_prueba",
+    textoBoton: "Ya está vinculada, siguiente"
+  },
+
+  envio_apache_prueba: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Prueba de envío",
+    pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. ¿Aparece el mensaje 'Enviado con éxito'?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, enviado con éxito",          destino: "envio_apache_final"   },
+      { texto: "No, da error o no hay cobertura", destino: "instalar_apache_apn" }
+    ]
+  },
+
+  envio_apache_final: {
+    tipo: "final",
+    breadcrumbLabel: "Envío activo",
+    resultadoTexto: "Perfecto, tu cámara Apache ya está enviando fotos a la plataforma Renyn. Recuerda deslizar el interruptor a ON para que empiece a disparar por detección de movimiento.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA CREEK — INSTALACIÓN COMPLETA
+  // La Creek no tiene SIM, no tiene app y no lleva antena.
+  // Las fotos se guardan en la SD y se recuperan manualmente.
+  // ================================================================
+
+  // -- Paso 1/3 — Abrir --
+  instalar_creek_abrir: {
+    tipo: "paso",
+    fase: "Fase 1 de 2 — Preparación del hardware",
+    breadcrumbLabel: "Hardware (1/3) — Abrir",
+    texto: `<strong>Paso 1 de 3 — Abre la cámara</strong><br><br>
+      Tira con cuidado de los <strong>cierres</strong> para abrir la carcasa.<br><br>
+      La Creek <strong>no usa tarjeta SIM ni antena</strong>. Solo necesitas: <strong>tarjeta SD y pilas AA</strong>.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_creek_sd",
+    textoBoton: "Cámara abierta, siguiente"
+  },
+
+  // -- Paso 2/3 — SD --
+  instalar_creek_sd: {
+    tipo: "paso",
+    fase: "Fase 1 de 2 — Preparación del hardware",
+    breadcrumbLabel: "Hardware (2/3) — SD",
+    texto: `<strong>Paso 2 de 3 — Tarjeta SD</strong><br><br>
+      La Creek admite tarjetas SD de <strong>hasta 128 GB</strong>. Inserta la tarjeta en la ranura.<br><br>
+      Usa una tarjeta formateada en <strong>FAT32</strong> (para tarjetas de hasta 32 GB) o en su <strong>formato de fábrica exFAT</strong> (para las de 64 GB o más).<br><br>
+      Si la tarjeta tiene pestaña de bloqueo lateral, comprueba que está en posición desbloqueada.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_creek_pilas",
+    textoBoton: "SD insertada, siguiente"
+  },
+
+  // -- Paso 3/3 — Pilas y cierre --
+  instalar_creek_pilas: {
+    tipo: "paso",
+    fase: "Fase 1 de 2 — Preparación del hardware",
+    breadcrumbLabel: "Hardware (3/3) — Pilas y cierre",
+    texto: `<strong>Paso 3 de 3 — Pilas y cierre</strong><br><br>
+      Coloca las <strong>pilas AA</strong> en el compartimento respetando la polaridad marcada en la carcasa (los símbolos + y –). Usa pilas alcalinas de buena calidad; no mezcles nuevas con usadas ni de distintas marcas.<br><br>
+      Cierra la carcasa asegurando los cierres. <strong>No hace falta antena</strong> — la Creek no tiene módulo de red.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_creek_final",
+    textoBoton: "Hardware listo, siguiente"
+  },
+
+  // -- Final --
+  instalar_creek_final: {
+    tipo: "final",
+    breadcrumbLabel: "Activar",
+    resultadoTexto: `¡Lista! Antes de colocarla definitivamente, pon el interruptor en <strong>SETUP</strong> para configurar los parámetros básicos (fecha, hora, calidad de imagen…). Cuando esté todo a tu gusto, desliza a <strong>ON</strong> y empezará a disparar por detección de movimiento.<br><br>
+      <strong>Cómo ver tus fotos y vídeos:</strong> La Creek no envía nada por internet. Todo se guarda en la tarjeta SD. Para recuperar las imágenes, apaga la cámara, retira la SD e introdúcela en tu móvil o en un ordenador con un lector de tarjetas.<br><br>
+      Lo que puedes ajustar en el menú:
+      <ul>
+        <li><strong>Calidad de imagen:</strong> hasta 24 MP — elige según el espacio que tengas en la SD.</li>
+        <li><strong>Flash LED:</strong> 10 LEDs infrarrojos invisibles (940 nm), alcance de unos 15 metros.</li>
+        <li><strong>Campo de visión:</strong> 80° — amplio, perfecto para caminos o bebederos.</li>
+      </ul>
+      <strong>Recuerda:</strong> La Creek no tiene SIM ni WiFi y no es compatible con la app Renyn Systems.`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
 
   // ================================================================
   // RAMA: PROBLEMAS / NO FUNCIONA (genérica para los 3 modelos)
@@ -1321,9 +1604,19 @@ function actualizarBreadcrumb(){
   const etiquetas = historial
     .map(id => ARBOL[id] && ARBOL[id].breadcrumbLabel)
     .filter(Boolean);
-  elBreadcrumb.innerHTML = etiquetas
-    .map(e => `<span>${e}</span>`)
-    .join('<span class="ftw-crumb-sep">›</span>');
+  const sep = '<span class="ftw-crumb-sep">›</span>';
+  let partes;
+  if(etiquetas.length <= 4){
+    partes = etiquetas.map(e => `<span>${e}</span>`);
+  } else {
+    partes = [
+      `<span>${etiquetas[0]}</span>`,
+      `<span class="ftw-crumb-sep">•••</span>`,
+      `<span>${etiquetas[etiquetas.length - 2]}</span>`,
+      `<span>${etiquetas[etiquetas.length - 1]}</span>`
+    ];
+  }
+  elBreadcrumb.innerHTML = partes.join(sep);
 }
 
 function htmlContacto(oculto){
