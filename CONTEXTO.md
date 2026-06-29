@@ -181,6 +181,87 @@ Términos técnicos (FAT32, clase 10, APN, etc.) usan `class="ftw-glosario"` par
 3. **Migas de pan con nodos repetidos**: cuando un flujo pasa dos veces por el mismo nodo (ej. "Prueba de envío" → APN manual → "Prueba de envío" otra vez), la etiqueta se repite en el breadcrumb. Opciones discutidas: añadir "(2ª vez)" automático, o deduplicar mostrando solo la primera aparición. **Sin implementar todavía.**
 4. **Rama "Problemas" por modelo**: actualmente es genérica. Se puede separar por modelo en el futuro.
 
+---
+
+## Especificaciones por modelo
+
+> Esta sección recoge las particularidades de cada cámara que afectan directamente al árbol de decisiones. Lo que no se especifica aquí se comporta igual que en la Cherokee (modelo de referencia).
+
+---
+
+### Cherokee
+
+- Modo de configuración: **SETUP** (nombre del interruptor físico).
+- Ranura SIM: lateral del cuerpo interno. Formato **Mini-SIM** (el más grande de los troquelados en el tarjetón portador).
+- Ranura SD: parte inferior del cuerpo interno. Formato **Full SD** (SD estándar, el más grande, ~32×24 mm).
+- Navegación en menú: `MENU → pestaña CAM → Instalar`.
+- Prueba de envío: al pulsar OK en modo SETUP aparece **"Enviando por FTP..."** seguido de **"Enviado con éxito"**. Eso confirma que la conexión funciona.
+- Indicador de éxito: mensaje "Enviado con éxito" en pantalla.
+
+---
+
+### Apache
+
+#### Hardware
+- Modo de configuración: **TEST** (mismo concepto que SETUP en Cherokee, pero con distinto nombre en el interruptor físico).
+- Ranura SIM: lateral del cuerpo interno. Formato **Nano-SIM** (el más pequeño de los troquelados en el tarjetón portador).
+- Ranura SD: parte inferior del cuerpo interno. Formato **Micro SD** (~15×11 mm).
+
+#### Menú
+- Al pulsar **MENU** en modo TEST, se entra directamente en **Ajustes** (no hay pestañas como CAM). El botón MENU también sirve para volver un paso atrás mientras se navega por los ajustes.
+- Ruta de vinculación: `MENU → Instalar`.
+
+#### Indicadores en pantalla (modo TEST)
+| Icono | Significado |
+|---|---|
+| Barras de cobertura 4G | SIM conectada a la red |
+| Icono de SIM en rojo | La cámara no detecta ninguna SIM |
+| Interrogación (?) sobre las barras | SIM detectada pero sin conexión (inactiva o APN incorrecto) |
+| **Nube azul con tick blanco** | Cámara sincronizada con la app Renyn y con cobertura activa → todo correcto |
+
+#### Sin mensajes FTP
+La Apache **no muestra** "Enviando por FTP..." ni "Enviado con éxito" al pulsar OK. El único indicador de que la configuración está completa es la **nube azul con tick blanco**.
+
+#### Flujo de instalación completo
+1. Abrir carcasa.
+2. Insertar nano-SIM en ranura lateral.
+3. Insertar micro SD en ranura inferior.
+4. Colocar pilas AA respetando polaridad.
+5. Cerrar carcasa y montar antena.
+6. Descargar app Renyn (App Store / Google Play).
+7. Poner interruptor en **TEST** → `MENU → Instalar` → escanear QR desde la app.
+8. Comprobar indicadores de cobertura en pantalla.
+9. Una vez confirmada la cobertura, **volver a escanear el QR** (siempre necesario tras resolver cualquier incidencia de SIM para que la cámara quede registrada).
+10. Verificar que aparece la **nube azul con tick blanco**.
+
+#### Diagnóstico de SIM (icono rojo)
+- Retirar y reinsertar la nano-SIM comprobando que el tamaño sea el correcto.
+- Si sigue en rojo tras reinserción → configurar APN.
+
+#### Diagnóstico de SIM (interrogación)
+1. ¿Está activa la SIM? (tarifa en vigor con datos móviles). Si no → activar o adquirir SIM Renyn.
+2. Si está activa → ¿es de Renyn?
+   - **No (otra operadora)** → configurar APN manualmente.
+   - **Sí** → ¿tipo?
+     - **Solo Movistar** → configurar APN.
+     - **Multioperadora** → reiniciar cámara + revincular por QR → verificar nube.
+
+#### SIM Renyn — tipos
+- **Solo Movistar**: opera únicamente con red Movistar. Requiere configuración manual del APN si da problemas.
+- **Multioperadora**: selecciona automáticamente la mejor red disponible. Si hay problemas, reiniciar y revincular por QR suele resolverlo.
+
+---
+
+### Creek
+
+- Sin tarjeta SIM ni antena — funciona únicamente en local.
+- Ranura SD: parte inferior del cuerpo interno. Formato **Micro SD** (igual que Apache).
+- Las fotos y vídeos se guardan en la SD y se recuperan manualmente (retirar la SD e introducirla en móvil u ordenador).
+- No es compatible con la app Renyn Systems.
+- No tiene flujo de conexión ni de envío — el nodo de conexión y el de envío llevan a un final informativo.
+
+---
+
 ## Cómo se instala en WordPress
 1. Crear un snippet nuevo en WPCode, tipo **"HTML Snippet"**.
 2. Pegar el contenido completo del archivo.
