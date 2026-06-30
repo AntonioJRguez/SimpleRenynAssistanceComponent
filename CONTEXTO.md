@@ -122,6 +122,26 @@ Placeholder visual naranja para ramas sin contenido todavía. Para completarla: 
 { tipo: "pendiente", breadcrumbLabel: "texto corto" }
 ```
 
+### 5. `tipo: "errores"`
+Panel interactivo de códigos de error. Muestra una cuadrícula de píldoras clicables; al pulsar cada una aparece un bloque con qué significa el error, posible causa y solución. No navega a otro nodo: el usuario puede explorar varios errores sin salir.
+
+```js
+{
+  tipo: "errores",
+  breadcrumbLabel: "texto corto",   // opcional
+  errores: [
+    {
+      codigo: "100",           // número visible en la píldora
+      nombre: "Nombre corto",
+      que: "Qué significa este error",
+      causas: "Posible causa o causas",
+      solucion: "Qué debe hacer el usuario (admite HTML)"
+    },
+    // …más errores
+  ]
+}
+```
+
 ---
 
 ## Estado de sesión
@@ -168,18 +188,15 @@ Términos técnicos (FAT32, clase 10, APN, etc.) usan `class="ftw-glosario"` par
 
 - **Pantalla inicial**: 4 casos de uso (Instalar / Configurar conexión / Envío de fotos / Tengo un problema).
 - Cada caso pregunta el **modelo**: Cherokee, Apache, Creek.
-- **Cherokee**: completamente desarrollada en los 3 flujos (instalación, conexión, envío de fotos), siguiendo el manual real.
-- **Creek**: "conexión" y "envío de fotos" tienen nodos finales reales (la cámara no tiene SIM ni WiFi). Instalación está como `pendiente`.
-- **Apache**: instalación, conexión y envío están como `pendiente`.
-- **Problemas / no funciona**: rama genérica para los 3 modelos (no enciende, no hace fotos, no envía fotos).
+- **Cherokee**: completamente desarrollada en los 4 flujos (instalación, conexión, envío, problemas con panel de códigos de error 100–600).
+- **Apache**: completamente desarrollada en los 3 flujos (instalación, conexión, envío). La rama "Problemas" va directamente a `soporte_directo`.
+- **Creek**: completamente desarrollada en los 3 flujos. Conexión y envío llevan a un final informativo (sin SIM ni app). Instalación tiene 3 pasos + final. La rama "Problemas" va directamente a `soporte_directo`.
 
 ---
 
 ## Pendiente de completar
-1. **Ramas Apache** (instalación, conexión, envío): nodos `pendiente_apache_*`.
-2. **Creek instalación**: nodo `pendiente_creek_instalar`.
-3. **Migas de pan con nodos repetidos**: cuando un flujo pasa dos veces por el mismo nodo (ej. "Prueba de envío" → APN manual → "Prueba de envío" otra vez), la etiqueta se repite en el breadcrumb. Opciones discutidas: añadir "(2ª vez)" automático, o deduplicar mostrando solo la primera aparición. **Sin implementar todavía.**
-4. **Rama "Problemas" por modelo**: actualmente es genérica. Se puede separar por modelo en el futuro.
+
+No hay pendientes conocidos en este momento.
 
 ---
 

@@ -1,3 +1,29 @@
 # Ignorar una carpeta entera (y todo su contenido)
 salidas-maker/
 .claude/
+.editorconfig
+
+# Dependencias de Node.js (si instalaste paquetes como ESLint, Prettier, Biome, etc.)
+node_modules/
+
+# Archivos de entorno (claves, variables locales)
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+.vscode/
+
+.claude/
+.mcp/
+.claude-dev/
