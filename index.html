@@ -733,9 +733,9 @@
    Cambia estos valores para adaptar el widget a tu instalación.
    ---------------------------------------------------------------- */
 const CONFIG = {
-  whatsapp:    "https://wa.me/34600000000",
+  whatsapp:    "https://wa.me/34613052960",
   email:       "soporte@tudominio.com",
-  manualesUrl: "https://tudominio.com/manuales"
+  manualesUrl: "https://renyn.es"
 };
 
 /* ================================================================
@@ -961,7 +961,7 @@ const ARBOL = {
     tipo: "paso",    breadcrumbLabel: "Hardware (4/5) — Pilas",
     texto: `<strong>Paso 4 de 5 — Pilas</strong><br><br>
       Coloca <strong>8 pilas AA</strong> en el compartimento respetando la polaridad indicada (el símbolo + y – marcado en la carcasa).<br><br>
-      Usa pilas alcalinas o <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Batería_de_níquel-metalhidruro" target="_blank" rel="noopener">NiMH</a> recargables de buena calidad. <strong>No mezcles pilas nuevas con usadas ni de distintas marcas</strong>, puede dañar la cámara.`,
+      Usa pilas alcalinas o <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/N%C3%ADquel-hidruro_met%C3%A1lico" target="_blank" rel="noopener">NiMH</a> recargables de buena calidad. <strong>No mezcles pilas nuevas con usadas ni de distintas marcas</strong>, puede dañar la cámara.`,
     imagen: "", manualUrl: "", manualTexto: "",
     siguiente: "instalar_cherokee_hw_antena",
     textoBoton: "Pilas colocadas, siguiente"
@@ -994,7 +994,7 @@ const ARBOL = {
     tipo: "paso",    breadcrumbLabel: "App (2/2) — Compatibilidad SIM",
     texto: `<strong>Paso 2 de 2 — Comprueba la compatibilidad de tu SIM</strong><br><br>
       Puedes usar la app aunque tu SIM <strong>no</strong> sea de Renyn, pero en ese caso solo podrás configurar la cámara <strong>físicamente</strong> (sin control remoto desde el móvil).<br><br>
-      Si usas una SIM de otro operador, es posible que tengas que configurar el <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Nombre_del_punto_de_acceso" target="_blank" rel="noopener">APN</a> manualmente. Te lo explicaremos más adelante si hace falta.`,
+      Si usas una SIM de otro operador, es posible que tengas que configurar el <a class="ftw-glosario" href="https://comunidad.movistar.es/kb/soporte_movil/c%C3%B3mo-configurar-el-apn-de-movistar-en-tu-m%C3%B3vil-paso-a-paso-2025%E2%9C%85/3616275" target="_blank" rel="noopener">APN</a> manualmente. Te lo explicaremos más adelante si hace falta.`,
     imagen: "", manualUrl: "", manualTexto: "",
     siguiente: "instalar_cherokee_app",
     textoBoton: "Entendido, siguiente"
@@ -1004,7 +1004,7 @@ const ARBOL = {
   instalar_cherokee_app: {
     tipo: "paso",    breadcrumbLabel: "Vincular (1/3) — SETUP",
     texto: `<strong>Paso 1 de 3 — Pon la cámara en modo SETUP</strong><br><br>
-      Desliza el interruptor a la posición <strong>SETUP</strong> y espera a que aparezca la imagen en la pantalla de la cámara Cherokee.`,
+      Desliza el interruptor a la posición <strong>SETUP</strong> y espera a que aparezca la imagen en la pantalla LCD de 2".`,
     imagen: "", manualUrl: "", manualTexto: "",
     siguiente: "instalar_cherokee_app_menu",
     textoBoton: "Pantalla encendida, siguiente"
@@ -1049,7 +1049,7 @@ const ARBOL = {
       <ul>
         <li>Ve a <strong>Red → SIM Detección Auto → Manual</strong>.</li>
         <li>Entra en <strong>SIM Config. Manual → 4G</strong>.</li>
-        <li>Introduce el <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Nombre_del_punto_de_acceso" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu proveedor (puedes consultarlos en la web de tu operadora si no los conoces).</li>
+        <li>Introduce el <a class="ftw-glosario" href="https://comunidad.movistar.es/kb/soporte_movil/c%C3%B3mo-configurar-el-apn-de-movistar-en-tu-m%C3%B3vil-paso-a-paso-2025%E2%9C%85/3616275" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu proveedor (puedes consultarlos en la web de tu operadora si no los conoces).</li>
       </ul>`,
     imagen: "", manualUrl: "", manualTexto: "",
     siguiente: ctx => ctx.conexion_cherokee_inicio ? "conexion_cherokee_prueba" : "instalar_cherokee_prueba",
@@ -1102,7 +1102,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Sí, enviado con éxito",          destino: "verificar_foto_cherokee" },
-      { texto: "No, da error o se queda colgado", destino: "soporte_directo"                 }
+      { texto: "No, da error o se queda colgado", destino: "pre_soporte_apn"                 }
     ]
   },
 
@@ -1292,7 +1292,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Volver a intentarlo",      destino: "instalar_apache_sim_rojo" },
-      { texto: "Contactar con soporte",    destino: "soporte_directo"          }
+      { texto: "Contactar con soporte",    destino: "pre_soporte_sim"          }
     ]
   },
 
@@ -1316,7 +1316,7 @@ const ARBOL = {
       <ul>
         <li>Ve a <strong>Red → SIM Detección Auto → Manual</strong>.</li>
         <li>Entra en <strong>SIM Config. Manual → 4G</strong>.</li>
-        <li>Introduce el <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Nombre_del_punto_de_acceso" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu operadora.</li>
+        <li>Introduce el <a class="ftw-glosario" href="https://comunidad.movistar.es/kb/soporte_movil/c%C3%B3mo-configurar-el-apn-de-movistar-en-tu-m%C3%B3vil-paso-a-paso-2025%E2%9C%85/3616275" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu operadora.</li>
       </ul>`,
     imagen: "", manualUrl: "", manualTexto: "",
     siguiente: ctx => ctx.instalar_apache_sim_interrogacion ? "instalar_apache_sync_qr" : "conexion_apache_sync_qr",
@@ -1347,7 +1347,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Sí, veo la nube azul con tick blanco", destino: "verificar_foto_apache_instalar" },
-      { texto: "No aparece la nube",                   destino: "soporte_directo"       }
+      { texto: "No aparece la nube",                   destino: "pre_soporte_nube"       }
     ]
   },
 
@@ -1408,7 +1408,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Volver a intentarlo",   destino: "conexion_apache_sim_rojo" },
-      { texto: "Contactar con soporte", destino: "soporte_directo"          }
+      { texto: "Contactar con soporte", destino: "pre_soporte_sim"          }
     ]
   },
 
@@ -1447,7 +1447,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Sí, veo la nube azul con tick blanco", destino: "verificar_foto_apache_conexion" },
-      { texto: "No aparece la nube",                   destino: "soporte_directo"       }
+      { texto: "No aparece la nube",                   destino: "pre_soporte_nube"       }
     ]
   },
 
@@ -1483,7 +1483,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Sí, veo la nube azul con tick blanco", destino: "verificar_foto_apache_envio" },
-      { texto: "No aparece la nube",                   destino: "soporte_directo"    }
+      { texto: "No aparece la nube",                   destino: "pre_soporte_nube"    }
     ]
   },
 
@@ -1647,7 +1647,7 @@ const ARBOL = {
     pregunta: "¿Has probado con pilas nuevas (alcalinas o litio recomendadas)?",
     incluirNinguna: false,
     opciones: [
-      { texto: "Sí", destino: "soporte_directo"            },
+      { texto: "Sí", destino: "pre_soporte_hardware"        },
       { texto: "No", destino: "problema_no_enciende_pilas" }
     ]
   },
@@ -1880,7 +1880,7 @@ const ARBOL = {
           return "instalar_cherokee_final";
         }
       },
-      { texto: "No, no aparece ninguna foto", destino: "soporte_directo" }
+      { texto: "No, no aparece ninguna foto", destino: "pre_soporte_foto_no_llega" }
     ]
   },
 
@@ -1891,7 +1891,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Sí, la veo en la app",       destino: "conexion_apache_final" },
-      { texto: "No, no aparece ninguna foto", destino: "soporte_directo"       }
+      { texto: "No, no aparece ninguna foto", destino: "pre_soporte_foto_no_llega" }
     ]
   },
 
@@ -1902,7 +1902,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Sí, la veo en la app",         destino: "instalar_apache_final" },
-      { texto: "No, no aparece ninguna foto",   destino: "soporte_directo"       }
+      { texto: "No, no aparece ninguna foto",   destino: "pre_soporte_foto_no_llega" }
     ]
   },
 
@@ -1913,7 +1913,7 @@ const ARBOL = {
     incluirNinguna: false,
     opciones: [
       { texto: "Sí, la veo en la app",         destino: "envio_apache_final"  },
-      { texto: "No, no aparece ninguna foto",   destino: "soporte_directo"     }
+      { texto: "No, no aparece ninguna foto",   destino: "pre_soporte_foto_no_llega" }
     ]
   },
 
@@ -1977,6 +1977,83 @@ const ARBOL = {
         <li>Si la SD parece dañada, fórmateala en FAT32 desde el ordenador (se borrarán todos los datos) y vuelve a insertarla.</li>
       </ul>`,
     imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  pre_soporte_sim: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — SIM",
+    texto: `<strong>Lo más probable: SIM dañada o ranura con problema físico</strong><br><br>
+      Cuando la cámara no detecta la SIM tras varios intentos, las causas habituales son:
+      <ul>
+        <li>La nano-SIM está mal cortada del tarjetón (tamaño incorrecto o bordes irregulares).</li>
+        <li>La ranura de la cámara está dañada o tiene suciedad que impide el contacto.</li>
+      </ul>
+      Antes de contactar, prueba a insertar esa misma SIM en un móvil. Si en el móvil funciona, el problema está en la ranura de la cámara.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_hardware: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — Hardware",
+    texto: `<strong>Lo más probable: problema de hardware</strong><br><br>
+      Si la cámara no enciende con pilas alcalinas nuevas, normalmente es por:
+      <ul>
+        <li>Contactos del compartimento de pilas oxidados o sucios.</li>
+        <li>Interruptor de encendido dañado.</li>
+        <li>Fallo en la placa interna.</li>
+      </ul>
+      Ten a mano la fecha de compra y el número de serie cuando contactes con soporte.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_apn: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — APN",
+    texto: `<strong>Lo más probable: error en los datos del APN o SIM sin datos activos</strong><br><br>
+      Si la cámara no consigue enviar la foto de prueba tras configurar el APN, suele ser por:
+      <ul>
+        <li>Un error tipográfico en el nombre del APN, usuario o contraseña.</li>
+        <li>La SIM no tiene un plan de datos activo o se ha agotado el bono.</li>
+        <li>El operador usa parámetros adicionales que no están en la configuración estándar.</li>
+      </ul>
+      Cuando contactes con soporte, ten a mano el nombre de tu operadora y los datos de APN que introdujiste.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_foto_no_llega: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — Fotos",
+    texto: `<strong>Lo más probable: problema de sincronización entre la cámara y la app</strong><br><br>
+      La cámara ha completado el proceso correctamente, pero las fotos no aparecen en la app. Esto suele indicar:
+      <ul>
+        <li>La app necesita refrescarse — ciérrala completamente y vuelve a abrirla.</li>
+        <li>La foto llegó a otra sección: revisa <strong>Galería</strong> o <strong>Mis cámaras</strong> en todos los apartados.</li>
+        <li>Un problema puntual de sincronización entre la cámara y tu cuenta en el servidor.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_nube: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — Nube",
+    texto: `<strong>Lo más probable: registro en la nube incompleto</strong><br><br>
+      La nube azul con tick no ha aparecido tras el escaneo del QR. Las causas más frecuentes son:
+      <ul>
+        <li>El servidor tardó en responder — espera 30 segundos y comprueba la pantalla de nuevo antes de continuar.</li>
+        <li>El QR se escaneó pero la vinculación de la cuenta no se completó en la app.</li>
+        <li>La cámara no tiene cobertura suficiente en ese momento para conectarse al servidor.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
   },
 
   soporte_directo: {
