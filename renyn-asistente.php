@@ -1,0 +1,2396 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+function renyn_asistente_shortcode() {
+	return <<<'HTML'
+<style>
+
+  /* ============================================================
+     SISTEMA DE DISEÑO — variables globales
+     ============================================================ */
+  :root {
+    --bg:             #09090b;
+    --surface:        #111115;
+    --surface-2:      #17171d;
+    --surface-3:      #1d1d26;
+    --border:         #26263a;
+    --border-subtle:  #1a1a26;
+    --text:           #f0f0f6;
+    --text-2:         #8888a8;
+    --text-3:         #4e4e66;
+    --red:            #dc2626;
+    --red-h:          #ef4444;
+    --red-bg:         rgba(220,38,38,.1);
+    --red-border:     rgba(220,38,38,.3);
+    --orange:         #ea580c;
+    --orange-bg:      rgba(234,88,12,.1);
+    --orange-border:  rgba(234,88,12,.35);
+    --green-bg:       rgba(34,197,94,.1);
+    --green-border:   rgba(34,197,94,.3);
+    --green-text:     #4ade80;
+    --radius:         22px;
+    --radius-md:      14px;
+    --radius-sm:      10px;
+    --radius-xs:      7px;
+    --pill:           100px;
+    --width:          540px;
+    --ease:           cubic-bezier(.4,0,.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  /* ── Contenedor principal ──────────────────────────────────── */
+  #ftw-widget {
+    width: var(--width);
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: -apple-system, 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--border-subtle), 0 12px 48px rgba(0,0,0,.55);
+  }
+
+  /* ── Cabecera ─────────────────────────────────────────────── */
+  #ftw-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 22px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  #ftw-header-titulo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--text-2);
+    min-width: 0;
+    flex: 1;
+  }
+
+  #ftw-soporte-fijo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--text-2);
+    padding: 6px 13px;
+    border-radius: var(--pill);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    transition: color 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease);
+    white-space: nowrap;
+  }
+  #ftw-soporte-fijo:hover {
+    color: var(--text);
+    border-color: var(--text-3);
+    background: var(--surface-3);
+  }
+
+  /* ── Migas de pan ─────────────────────────────────────────── */
+  #ftw-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    padding: 9px 22px;
+    font-size: .7rem;
+    font-weight: 500;
+    color: var(--text-3);
+    letter-spacing: .3px;
+    border-bottom: 1px solid var(--border-subtle);
+    min-height: 36px;
+  }
+  #ftw-breadcrumb span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #ftw-breadcrumb span:last-child { color: var(--text-2); }
+  #ftw-breadcrumb .ftw-crumb-sep {
+    flex-shrink: 0;
+    color: var(--text-3);
+    margin: 0 3px;
+    font-size: .6rem;
+    opacity: .6;
+  }
+
+  /* ── Cuerpo ───────────────────────────────────────────────── */
+  #ftw-body {
+    padding: 28px 22px 24px;
+  }
+
+  /* ── Iconos SVG inline (Lucide) ───────────────────────────── */
+  .ftw-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    margin-right: 5px;
+    stroke: currentColor;
+    fill: none;
+    flex-shrink: 0;
+  }
+
+  /* ── Pregunta ─────────────────────────────────────────────── */
+  #ftw-pregunta {
+    font-size: 1.06rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--text);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+  }
+  /* ── Opciones ─────────────────────────────────────────────── */
+  #ftw-opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── Botón base ───────────────────────────────────────────── */
+  .ftw-btn {
+    width: 100%;
+    padding: 13px 18px;
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .93rem;
+    font-weight: 600;
+    letter-spacing: .1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    gap: 12px;
+    transition:
+      background 160ms var(--ease),
+      border-color 160ms var(--ease),
+      color 160ms var(--ease),
+      transform 140ms var(--ease),
+      box-shadow 160ms var(--ease);
+  }
+  .ftw-btn:hover {
+    background: var(--red-bg);
+    border-color: var(--red-border);
+    color: #fff;
+    transform: translateX(3px);
+  }
+  .ftw-btn:active { transform: translateX(1px) scale(.99); }
+  .ftw-btn:disabled {
+    opacity: .35;
+    cursor: default;
+    transform: none;
+  }
+
+  /* Chevron */
+  .ftw-btn-chevron {
+    flex-shrink: 0;
+    color: var(--text-3);
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 160ms var(--ease), transform 160ms var(--ease);
+  }
+  .ftw-btn:hover .ftw-btn-chevron {
+    color: rgba(255,255,255,.5);
+    transform: translateX(3px);
+  }
+
+  /* Descripción por opción — dentro del botón, siempre visible */
+  .ftw-btn--has-desc { align-items: flex-start; }
+  .ftw-btn-inner { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+  .ftw-btn-desc {
+    font-size: .81rem;
+    font-weight: 400;
+    color: var(--text-3);
+    line-height: 1.45;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    transition: color 160ms var(--ease), border-color 160ms var(--ease);
+  }
+  .ftw-btn--has-desc .ftw-btn-chevron { margin-top: 2px; }
+  .ftw-btn--has-desc:hover .ftw-btn-desc {
+    color: rgba(255,255,255,.6);
+    border-color: rgba(255,255,255,.12);
+  }
+
+  /* Botón "ninguna de las anteriores" */
+  .ftw-btn-ninguna {
+    background: transparent;
+    color: var(--text-2);
+    border-style: dashed;
+    font-weight: 500;
+  }
+  .ftw-btn-ninguna:hover {
+    background: rgba(255,255,255,.03);
+    border-color: var(--text-3);
+    color: var(--text);
+    transform: none;
+  }
+
+  /* Separador visual antes del botón de errores en el inicio */
+  .ftw-sep-errores {
+    margin-top: 20px;
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .ftw-btn-errores {
+    margin-top: 4px;
+    background: transparent;
+    border-color: var(--red-border);
+    color: var(--text-2);
+    font-weight: 500;
+  }
+  .ftw-btn-errores:hover {
+    background: var(--red-bg);
+    border-color: var(--red-border);
+    color: var(--text);
+    transform: none;
+  }
+  .ftw-btn-errores .ftw-icon { color: var(--red-h); flex-shrink: 0; }
+  #ftw-pregunta .ftw-icon {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: var(--text-3);
+    margin-right: 0;
+  }
+
+  /* Botón "Siguiente" (CTA principal en pasos) */
+  .ftw-btn-siguiente {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+    font-size: .97rem;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 14px rgba(220,38,38,.22);
+  }
+  .ftw-btn-siguiente:hover {
+    background: var(--red-h);
+    border-color: var(--red-h);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 22px rgba(220,38,38,.36);
+  }
+  .ftw-btn-siguiente:active { transform: translateY(0); box-shadow: none; }
+  .ftw-btn-siguiente .ftw-btn-chevron { display: none; }
+
+  /* Botón "Sí, todo resuelto" */
+  #ftw-sat-si {
+    background: var(--green-bg);
+    border-color: var(--green-border);
+    color: var(--green-text);
+    justify-content: center;
+    gap: 8px;
+  }
+  #ftw-sat-si:hover {
+    background: rgba(34,197,94,.16);
+    border-color: rgba(34,197,94,.5);
+    color: var(--green-text);
+    transform: none;
+    box-shadow: 0 2px 12px rgba(34,197,94,.15);
+  }
+  #ftw-sat-si .ftw-btn-chevron { display: none; }
+
+  /* ── Etiqueta de fase ────────────────────────────────────── */
+  .ftw-fase-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 8px 14px;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+  .ftw-fase-header .ftw-fase-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  /* ── Bloque de instrucciones (pasos) ──────────────────────── */
+  .ftw-paso-bloque,
+  .ftw-pregunta-desc {
+    background: var(--bg);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--border);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 16px 20px;
+    margin-bottom: 18px;
+    color: var(--text);
+    font-size: .92rem;
+    line-height: 1.68;
+  }
+  .ftw-paso-bloque ul, .ftw-pregunta-desc ul,
+  .ftw-paso-bloque ol, .ftw-pregunta-desc ol { margin: 8px 0 0; padding-left: 20px; }
+  .ftw-paso-bloque li, .ftw-pregunta-desc li { margin-bottom: 7px; }
+  .ftw-paso-bloque li:last-child, .ftw-pregunta-desc li:last-child { margin-bottom: 0; }
+
+  /* ── Textos resultado / paso ──────────────────────────────── */
+  #ftw-resultado-texto, #ftw-paso-texto {
+    font-size: .93rem;
+    line-height: 1.68;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  #ftw-resultado-texto ul, #ftw-paso-texto ul { margin: 8px 0 0; padding-left: 18px; }
+  #ftw-resultado-media img, #ftw-paso-media img {
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+    margin-bottom: 14px;
+    display: block;
+  }
+  #ftw-resultado-media a.ftw-manual-link,
+  #ftw-paso-media a.ftw-manual-link {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: .9rem;
+  }
+
+  /* ── Nodo pendiente ───────────────────────────────────────── */
+  #ftw-pendiente-box {
+    background: var(--orange-bg);
+    border: 1px dashed var(--orange-border);
+    border-radius: var(--radius-sm);
+    padding: 20px 18px;
+    text-align: center;
+    color: var(--orange);
+    font-weight: 600;
+    font-size: .91rem;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #ftw-pendiente-box .ftw-icon {
+    width: 1.6em;
+    height: 1.6em;
+    margin-right: 0;
+  }
+  .ftw-icon-naranja { stroke: var(--orange); }
+
+  /* ── Pregunta de satisfacción ─────────────────────────────── */
+  #ftw-satisfaccion {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  #ftw-satisfaccion p {
+    margin: 0 0 14px;
+    font-weight: 600;
+    text-align: center;
+    font-size: .9rem;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+  #ftw-satisfaccion p .ftw-icon { margin-right: 0; color: var(--text-3); }
+
+  /* ── Bloque de contacto ───────────────────────────────────── */
+  #ftw-contacto {
+    margin-top: 16px;
+    padding: 18px;
+    background: var(--bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: .875rem;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+  #ftw-contacto a {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .ftw-btn-reiniciar-grande {
+    margin-top: 14px;
+    width: 100%;
+    padding: 13px 20px;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .93rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 160ms var(--ease), transform 140ms var(--ease);
+  }
+  .ftw-btn-reiniciar-grande:hover {
+    background: var(--red-h);
+    transform: translateY(-1px);
+  }
+
+  /* ── Glosario ─────────────────────────────────────────────── */
+  .ftw-glosario {
+    color: var(--text-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--text-3);
+    font-weight: 500;
+    transition: color 140ms, border-color 140ms;
+  }
+  .ftw-glosario:hover { color: var(--text); border-color: var(--text-2); }
+
+  /* ── Animación de entrada ─────────────────────────────────── */
+  @keyframes ftw-fadein {
+    from { opacity: 0; transform: translateY(7px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
+  #ftw-body.ftw-animando {
+    animation: ftw-fadein 220ms var(--ease) both;
+  }
+
+  /* ── Pie de navegación ────────────────────────────────────── */
+  #ftw-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 22px;
+    border-top: 1px solid var(--border-subtle);
+    background: var(--bg);
+  }
+  #ftw-footer button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: .8rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 8px 14px;
+    border-radius: var(--radius-xs);
+    transition: color 160ms var(--ease), background 160ms var(--ease), border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+  }
+  #ftw-footer button:hover:not(:disabled) {
+    color: var(--text);
+    background: var(--surface-3);
+    border-color: var(--text-3);
+  }
+  #ftw-footer button:disabled {
+    opacity: .25;
+    cursor: default;
+  }
+  #ftw-footer button .ftw-icon { margin-right: 0; }
+
+  /* Reiniciar — tinte rojo para indicar acción de reseteo */
+  #ftw-btn-reiniciar {
+    color: var(--red-h);
+    border-color: var(--red-border);
+    background: var(--red-bg);
+  }
+  #ftw-btn-reiniciar:hover:not(:disabled) {
+    color: #fff;
+    background: var(--red);
+    border-color: var(--red);
+    box-shadow: 0 2px 10px rgba(220,38,38,.3);
+  }
+
+  /* ── Códigos de error ─────────────────────────────────── */
+  .ftw-errores-intro {
+    font-size: .88rem;
+    color: var(--text-2);
+    margin-bottom: 16px;
+    line-height: 1.55;
+  }
+  .ftw-errores-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 18px;
+  }
+  .ftw-error-pill {
+    padding: 7px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--pill);
+    color: var(--text-2);
+    font-size: .78rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: .3px;
+    transition: background 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease);
+  }
+  .ftw-error-pill:hover { background: var(--red-bg); border-color: var(--red-border); color: var(--red-h); }
+  .ftw-error-pill.ftw-activo { background: var(--red-bg); border-color: var(--red-border); color: var(--red-h); }
+  .ftw-error-detalle-box {
+    background: var(--bg);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--red);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 16px 20px;
+    margin-bottom: 18px;
+    font-size: .88rem;
+    line-height: 1.65;
+    color: var(--text);
+    animation: ftw-fadein 180ms var(--ease) both;
+  }
+  .ftw-error-titulo {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: var(--red-h);
+    margin-bottom: 10px;
+  }
+  .ftw-error-seccion {
+    font-weight: 700;
+    color: var(--text-2);
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    display: block;
+    margin: 10px 0 4px;
+  }
+  .ftw-error-seccion:first-of-type { margin-top: 0; }
+
+  /* ── Modo claro ──────────────────────────────────────────────── */
+  #ftw-widget.ftw-light {
+    --bg:            #f5f5fa;
+    --surface:       #ffffff;
+    --surface-2:     #ededf5;
+    --surface-3:     #e2e2ef;
+    --border:        #c8c8de;
+    --border-subtle: #dcdcee;
+    --text:          #0f0f18;
+    --text-2:        #52527a;
+    --text-3:        #8888aa;
+    --red-bg:        rgba(220,38,38,.08);
+    --red-border:    rgba(220,38,38,.25);
+    --green-bg:      rgba(34,197,94,.08);
+    --green-border:  rgba(34,197,94,.22);
+    box-shadow: 0 0 0 1px var(--border-subtle), 0 8px 32px rgba(0,0,0,.1);
+  }
+  /* En claro el hover de botón va a rojo oscuro (excluye errores y ninguna que tienen su propio estilo) */
+  #ftw-widget.ftw-light .ftw-btn:not(.ftw-btn-errores):not(.ftw-btn-ninguna):not(#ftw-sat-si):hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+  }
+  /* Botón de errores en modo claro: tono distinto, icono visible */
+  #ftw-widget.ftw-light .ftw-btn-errores .ftw-icon { color: var(--red); }
+  #ftw-widget.ftw-light .ftw-btn-errores:hover {
+    background: rgba(220,38,38,.1);
+    border-color: rgba(220,38,38,.45);
+    color: var(--red);
+    transform: none;
+  }
+  #ftw-widget.ftw-light .ftw-btn-errores:hover .ftw-icon { color: var(--red); }
+
+  /* ── Botón de tema ───────────────────────────────────────────── */
+  #ftw-btn-tema {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--pill);
+    color: var(--text-2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 160ms var(--ease), background 160ms var(--ease), border-color 160ms var(--ease);
+  }
+  #ftw-btn-tema:hover { color: var(--text); background: var(--surface-3); border-color: var(--text-3); }
+  #ftw-btn-tema:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+  #ftw-btn-tema .ftw-icon { margin: 0; width: 15px; height: 15px; }
+
+  /* ── Responsive ──────────────────────────────────────────────── */
+
+  /* Tablet / móvil normal: reducir espaciados */
+  @media (max-width: 540px) {
+    #ftw-header     { padding: 13px 16px; }
+    #ftw-breadcrumb { padding: 7px 16px; font-size: .65rem; }
+    #ftw-body       { padding: 22px 16px 18px; }
+    #ftw-footer     { padding: 9px 16px; }
+    #ftw-pregunta   { font-size: .98rem; }
+    .ftw-paso-bloque,
+    .ftw-pregunta-desc { padding: 13px 15px; }
+  }
+
+  /* Móvil estrecho: compactar y colapsar etiquetas */
+  @media (max-width: 420px) {
+    :root { --radius: 16px; --radius-md: 11px; }
+    #ftw-header     { padding: 11px 14px; gap: 8px; }
+    #ftw-header-titulo {
+      font-size: .82rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    #ftw-soporte-fijo .ftw-label { display: none; }
+    #ftw-soporte-fijo { padding: 7px 10px; gap: 0; }
+    #ftw-breadcrumb { padding: 6px 14px; font-size: .6rem; }
+    #ftw-body       { padding: 18px 14px 15px; }
+    #ftw-footer     { padding: 8px 14px; }
+    #ftw-btn-atras .ftw-label,
+    #ftw-btn-reiniciar .ftw-label { display: none; }
+    #ftw-footer button  { padding: 7px 10px; }
+    #ftw-pregunta   { font-size: .92rem; margin-bottom: 16px; }
+    .ftw-btn        { padding: 11px 13px; font-size: .88rem; }
+    .ftw-btn-desc   { font-size: .8rem; }
+  }
+
+  /* Widget de barra lateral / columna muy estrecha */
+  @media (max-width: 340px) {
+    :root { --radius: 12px; --radius-md: 9px; }
+    #ftw-header-titulo { font-size: .76rem; }
+    #ftw-body       { padding: 14px 12px 12px; }
+    #ftw-breadcrumb { display: none; }
+    .ftw-btn        { padding: 10px 12px; font-size: .84rem; }
+  }
+
+</style>
+
+<div id="ftw-widget">
+
+  <div id="ftw-header">
+    <span id="ftw-header-titulo">
+      <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+      Asistente de instalación y configuración
+    </span>
+    <button type="button" id="ftw-btn-tema" aria-label="Cambiar a modo claro"></button>
+    <!-- biome-ignore lint/a11y/useValidAnchor: href set dynamically by JS -->
+    <a id="ftw-soporte-fijo" href="#" target="_blank" rel="noopener">
+      <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
+      <span class="ftw-label">¿Necesitas ayuda?</span>
+    </a>
+  </div>
+
+  <div id="ftw-breadcrumb"></div>
+
+  <div id="ftw-body">
+    <!-- contenido inyectado dinámicamente -->
+  </div>
+
+  <div id="ftw-footer">
+    <button type="button" id="ftw-btn-atras">
+      <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      <span class="ftw-label">Paso anterior</span>
+    </button>
+    <button type="button" id="ftw-btn-reiniciar">
+      <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      <span class="ftw-label">Reiniciar asistente</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- ================================================================
+     BLOQUE 1 — DATOS Y CONFIGURACIÓN
+     Edita aquí: contacto, URLs, y todo el contenido del árbol.
+     No necesitas tocar el Bloque 2 (motor) para añadir contenido.
+     ================================================================ -->
+<script>
+
+/* ----------------------------------------------------------------
+   CONFIG — todos los datos de contacto y URLs en un único lugar.
+   Cambia estos valores para adaptar el widget a tu instalación.
+   ---------------------------------------------------------------- */
+const CONFIG = {
+  whatsapp:    "https://wa.me/34613052960",
+  email:       "soporte@tudominio.com",
+  manualesUrl: "https://renyn.es"
+};
+
+/* ================================================================
+   ÁRBOL DE DECISIONES
+   ================================================================
+   Cada nodo es una clave única. Hay 4 TIPOS de nodo:
+
+   1) "pregunta" — el cliente elige entre varias opciones.
+      El campo "destino" de cada opción puede ser:
+        - Un string: id del nodo destino.  ej: destino: "mi_nodo"
+        - Una función: recibe el contexto de sesión (objeto con las
+          respuestas anteriores del usuario) y devuelve un string.
+          ej: destino: ctx => ctx.instalar_modelo?.texto === "Cherokee"
+                               ? "instalar_cherokee_hw"
+                               : "pendiente_apache_instalar"
+      {
+        tipo: "pregunta",
+        breadcrumbLabel: "texto corto" (opcional),
+        pregunta: "Texto de la pregunta",
+        incluirNinguna: true/false,
+        ningunaDestino: "idNodo",         // solo si incluirNinguna:true
+        opciones: [ { texto:"...", destino: "idNodo" | fn }, ... ]
+      }
+
+   2) "paso" — instrucción intermedia de un proceso secuencial.
+      {
+        tipo: "paso",
+        breadcrumbLabel: "texto corto" (opcional),
+        texto: "Instrucciones (admite HTML, ej. <ul><li>)",
+        imagen: "" (opcional),
+        manualUrl: "" (opcional),
+        manualTexto: "" (opcional),
+        siguiente: "idNodo",
+        textoBoton: "Siguiente" (opcional)
+      }
+
+   3) "final" — hoja real del árbol. Pregunta satisfacción al usuario.
+      {
+        tipo: "final",
+        breadcrumbLabel: "texto corto" (opcional),
+        resultadoTexto: "Texto final (admite HTML)",
+        imagen: "" (opcional),
+        manualUrl: "" (opcional),
+        manualTexto: "" (opcional)
+      }
+
+   4) "pendiente" — placeholder naranja para ramas sin contenido aún.
+      {
+        tipo: "pendiente",
+        breadcrumbLabel: "texto corto" (opcional)
+      }
+
+   ----------------------------------------------------------------
+   PARA AÑADIR UN TIPO DE NODO NUEVO:
+   - Define la estructura del nodo en ARBOL.
+   - Añade su función renderizarXxx(nodo) en el Bloque 2.
+   - Regístrala en el mapa RENDERIZADORES del Bloque 2.
+   ----------------------------------------------------------------
+   GLOSARIO / ENLACES A WIKIPEDIA:
+   <a class="ftw-glosario" href="URL" target="_blank" rel="noopener">término</a>
+   ================================================================ */
+
+const ARBOL = {
+
+  // ================================================================
+  // PANTALLA INICIAL — 4 casos de uso principales
+  // ================================================================
+  inicio: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Inicio",
+    pregunta: "¿Qué necesitas hacer?",
+    incluirNinguna: false,
+    opciones: [
+      {
+        texto: "Instalar mi cámara",
+        desc: "Primera configuración desde cero: hardware, SIM, SD y vinculación con la app.",
+        destino: "instalar_modelo"
+      },
+      {
+        texto: "Configurar conexión / No me llegan las fotos",
+        desc: "Sin cobertura, error de SIM, APN incorrecto, o la cámara tiene señal pero las fotos no aparecen en la app Renyn.",
+        destino: "conexion_modelo"
+      },
+      {
+        texto: "Tengo un problema / no funciona",
+        desc: "La cámara no enciende, no detecta movimiento, no hace fotos, o falla de otra forma.",
+        destino: "problema_modelo"
+      }
+    ],
+    opcionAlerta: { texto: "Ver los códigos de error más comunes", destino: "errores_modelo" }
+  },
+
+  // ================================================================
+  // SELECCIÓN DE MODELO
+  // ================================================================
+  problema_modelo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Modelo",
+    pregunta: "¿Qué modelo de cámara tienes?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Cherokee", destino: "problema_tipo"        },
+      { texto: "Apache",   destino: "problema_apache_tipo" },
+      { texto: "Creek",    destino: "problema_creek_tipo"  }
+    ]
+  },
+
+  errores_modelo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Modelo",
+    pregunta: "¿Qué modelo de cámara tienes?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Cherokee", destino: "errores_cherokee" },
+      { texto: "Apache",   destino: "soporte_directo"  },
+      { texto: "Creek",    destino: "soporte_directo"  }
+    ]
+  },
+
+  instalar_modelo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Instalar cámara",
+    pregunta: "¿Qué modelo de cámara vas a instalar?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Cherokee", destino: "instalar_cherokee_hw_abrir"  },
+      { texto: "Apache",   destino: "instalar_apache_hw_abrir"  },
+      { texto: "Creek",    destino: "instalar_creek_abrir"       }
+    ]
+  },
+
+  conexion_modelo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Conexión / Fotos",
+    pregunta: "¿Qué modelo de cámara tienes?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Cherokee", destino: "conexion_cherokee_situacion"  },
+      { texto: "Apache",   destino: "conexion_apache_situacion"    },
+      { texto: "Creek",    destino: "conexion_creek_sin_internet"  }
+    ]
+  },
+
+  conexion_cherokee_situacion: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Situación",
+    pregunta: "¿Cuál describe mejor tu situación?",
+    incluirNinguna: false,
+    opciones: [
+      {
+        texto: "La cámara no tiene cobertura o aparece un error de red",
+        desc: "La pantalla no muestra barras 4G, aparece 'Error de detección SIM' o el APN no está configurado.",
+        destino: "conexion_cherokee_inicio"
+      },
+      {
+        texto: "Tengo cobertura pero las fotos no llegan a la app",
+        desc: "La cámara tiene señal 4G, pero no veo fotos en la app Renyn o la cámara no está vinculada.",
+        destino: "envio_cherokee_vincular"
+      }
+    ]
+  },
+
+  conexion_apache_situacion: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Situación",
+    pregunta: "¿Cuál describe mejor tu situación?",
+    incluirNinguna: false,
+    opciones: [
+      {
+        texto: "La cámara no tiene cobertura o hay errores de red",
+        desc: "No veo barras 4G, aparece el icono de SIM en rojo o una interrogación sobre las barras de cobertura.",
+        destino: "conexion_apache_inicio"
+      },
+      {
+        texto: "Tengo cobertura pero las fotos no llegan a la app",
+        desc: "Hay señal, pero no veo fotos en la app Renyn o la nube azul con tick blanco no aparece.",
+        destino: "envio_apache_vincular"
+      }
+    ]
+  },
+
+  // ================================================================
+  // RAMA CHEROKEE — INSTALACIÓN COMPLETA (según manual)
+  // ================================================================
+
+  // -- Hardware: paso 1/5 — Abrir la cámara --
+  instalar_cherokee_hw_abrir: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (1/5) — Abrir",
+    texto: `<strong>Paso 1 de 5 — Abre la cámara</strong><br><br>
+      Tira con cuidado de los <strong>cierres laterales</strong> para abrir la carcasa de la cámara.<br><br>
+      Ten a mano todo lo que necesitas antes de empezar: <strong>tarjeta SIM, tarjeta SD, 8 pilas AA y la antena</strong>.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_hw",
+    textoBoton: "Cámara abierta, siguiente"
+  },
+
+  // -- Hardware: paso 2/5 --
+  instalar_cherokee_hw: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (2/5) — SIM",
+    texto: `<strong>Paso 2 de 5 — Tarjeta SIM</strong><br><br>
+      La ranura SIM se encuentra en el <strong>lateral del cuerpo interno</strong> de la cámara (el chasis negro que queda expuesto al abrir la carcasa).<br><br>
+      La Cherokee utiliza <strong>Mini-SIM</strong> — el formato más grande. Si tu <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Tarjeta_SIM" target="_blank" rel="noopener">tarjeta SIM</a> viene en un tarjetón portador con varios tamaños troquelados, fíjate bien en las marcas antes de extraerla y rompe por la línea que corresponde al tamaño <em>más grande</em>.<br><br>
+      Desliza la SIM en la ranura hasta que encaje. Si es de Renyn, la conexión será automática; si es de otro operador, configuraremos el APN más adelante.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_hw_sd",
+    textoBoton: "SIM insertada, siguiente"
+  },
+
+  // -- Hardware: paso 3/5 --
+  instalar_cherokee_hw_sd: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (3/5) — SD",
+    texto: `<strong>Paso 3 de 5 — Tarjeta SD</strong><br><br>
+      La ranura SD se encuentra en la <strong>parte inferior del cuerpo interno</strong>. La Cherokee usa <strong>SD estándar</strong> (<a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Secure_Digital" target="_blank" rel="noopener">Full SD</a>) — el formato más grande, de unos 32 × 24 mm.<br><br>
+      Inserta una tarjeta de <strong>4 a 32 GB</strong> formateada en <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/FAT32" target="_blank" rel="noopener">FAT32</a> (el formato más habitual para ese tamaño).<br><br>
+      Si la tarjeta tiene una <strong>pestañita de bloqueo</strong> en el lateral, asegúrate de que está en posición desbloqueada (hacia arriba) antes de insertarla.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_hw_pilas",
+    textoBoton: "SD insertada, siguiente"
+  },
+
+  // -- Hardware: paso 4/5 --
+  instalar_cherokee_hw_pilas: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (4/5) — Pilas",
+    texto: `<strong>Paso 4 de 5 — Pilas</strong><br><br>
+      Coloca <strong>8 pilas AA</strong> en el compartimento respetando la polaridad indicada (el símbolo + y – marcado en la carcasa).<br><br>
+      Usa pilas alcalinas o <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/N%C3%ADquel-hidruro_met%C3%A1lico" target="_blank" rel="noopener">NiMH</a> recargables de buena calidad. <strong>No mezcles pilas nuevas con usadas ni de distintas marcas</strong>, puede dañar la cámara.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_hw_antena",
+    textoBoton: "Pilas colocadas, siguiente"
+  },
+
+  // -- Hardware: paso 5/5 --
+  instalar_cherokee_hw_antena: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (5/5) — Cerrar y antena",
+    texto: `<strong>Paso 5 de 5 — Cierra y monta la antena</strong><br><br>
+      <strong>1.</strong> Cierra la carcasa asegurando los cierres laterales.<br><br>
+      <strong>2.</strong> Retira el protector de plástico de la <strong>antena</strong> y enróscala en la parte superior de la cámara.<br><br>
+      <strong>Importante:</strong> nunca enciendas la cámara sin la antena puesta; podrías dañar el módulo de transmisión.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_descargar_app",
+    textoBoton: "Antena puesta, siguiente"
+  },
+
+  // -- Descargar app: paso 1/2 --
+  instalar_cherokee_descargar_app: {
+    tipo: "paso",    breadcrumbLabel: "App (1/2) — Descarga",
+    texto: `<strong>Paso 1 de 2 — Descarga la app Renyn</strong><br><br>
+      Abre la tienda de aplicaciones de tu móvil (<strong>App Store</strong> en iPhone o <strong>Google Play</strong> en Android) y busca <strong>Renyn</strong>. Descárgala e instálala.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_descargar_app_sim",
+    textoBoton: "App instalada, siguiente"
+  },
+
+  // -- Descargar app: paso 2/2 --
+  instalar_cherokee_descargar_app_sim: {
+    tipo: "paso",    breadcrumbLabel: "App (2/2) — Compatibilidad SIM",
+    texto: `<strong>Paso 2 de 2 — Comprueba la compatibilidad de tu SIM</strong><br><br>
+      Puedes usar la app aunque tu SIM <strong>no</strong> sea de Renyn, pero en ese caso solo podrás configurar la cámara <strong>físicamente</strong> (sin control remoto desde el móvil).<br><br>
+      Si usas una SIM de otro operador, es posible que tengas que configurar el <a class="ftw-glosario" href="https://comunidad.movistar.es/kb/soporte_movil/c%C3%B3mo-configurar-el-apn-de-movistar-en-tu-m%C3%B3vil-paso-a-paso-2025%E2%9C%85/3616275" target="_blank" rel="noopener">APN</a> manualmente. Te lo explicaremos más adelante si hace falta.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_app",
+    textoBoton: "Entendido, siguiente"
+  },
+
+  // -- Vincular app: paso 1/3 --
+  instalar_cherokee_app: {
+    tipo: "paso",    breadcrumbLabel: "Vincular (1/3) — SETUP",
+    texto: `<strong>Paso 1 de 3 — Pon la cámara en modo SETUP</strong><br><br>
+      Desliza el interruptor a la posición <strong>SETUP</strong> y espera a que aparezca la imagen en la pantalla LCD de 2".`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_app_menu",
+    textoBoton: "Pantalla encendida, siguiente"
+  },
+
+  // -- Vincular app: paso 2/3 --
+  instalar_cherokee_app_menu: {
+    tipo: "paso",    breadcrumbLabel: "Vincular (2/3) — Menú",
+    texto: `<strong>Paso 2 de 3 — Accede al menú de instalación</strong><br><br>
+      Pulsa el botón <strong>MENU</strong> en la cámara, navega hasta la pestaña <strong>CAM</strong> y selecciona la opción <strong>Instalar</strong>.<br><br>
+      <em>Recuerda: el botón MENU también sirve para volver un paso atrás mientras navegas por los ajustes.</em>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_app_qr",
+    textoBoton: "Opción seleccionada, siguiente"
+  },
+
+  // -- Vincular app: paso 3/3 --
+  instalar_cherokee_app_qr: {
+    tipo: "paso",    breadcrumbLabel: "Vincular (3/3) — QR",
+    texto: `<strong>Paso 3 de 3 — Escanea el código QR</strong><br><br>
+      La cámara mostrará un <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/C%C3%B3digo_QR" target="_blank" rel="noopener">código QR</a> en pantalla. Abre la app Renyn en tu móvil, pulsa <strong>"Añadir cámara"</strong> y escanea el código para completar el registro en la nube.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_cherokee_red",
+    textoBoton: "Cámara vinculada, siguiente"
+  },
+
+  instalar_cherokee_red: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Red",
+    pregunta: "En modo SETUP, ¿la pantalla muestra las barras de cobertura 4G sin ningún mensaje de error?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, hay cobertura 4G",               destino: "instalar_cherokee_prueba" },
+      { texto: "No, aparece 'Error de detección SIM'", destino: "apn_cherokee"  }
+    ]
+  },
+
+  apn_cherokee: {
+    tipo: "paso",
+    breadcrumbLabel: "APN manual",
+    texto: `Configura la red manualmente:
+      <ul>
+        <li>Ve a <strong>Red → SIM Detección Auto → Manual</strong>.</li>
+        <li>Entra en <strong>SIM Config. Manual → 4G</strong>.</li>
+        <li>Introduce el <a class="ftw-glosario" href="https://comunidad.movistar.es/kb/soporte_movil/c%C3%B3mo-configurar-el-apn-de-movistar-en-tu-m%C3%B3vil-paso-a-paso-2025%E2%9C%85/3616275" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu proveedor (puedes consultarlos en la web de tu operadora si no los conoces).</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: ctx => ctx.conexion_cherokee_inicio ? "conexion_cherokee_prueba" : "instalar_cherokee_prueba",
+    textoBoton: "APN configurado, siguiente"
+  },
+
+  instalar_cherokee_prueba: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Prueba de envío",
+    pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Primero verás 'Enviando por FTP...' durante unos segundos. ¿Después aparece el mensaje 'Enviado con éxito'?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_cherokee" },
+      { texto: "No, da error o se queda colgado", destino: "problema_no_envia_cobertura" }
+    ]
+  },
+
+  instalar_cherokee_final: {
+    tipo: "final",
+    breadcrumbLabel: "Activar",
+    resultadoTexto: `¡Última fase! Desliza el interruptor a la posición <strong>ON</strong>. La pantalla se apagará y la cámara quedará lista para disparar por detección de movimiento.<br><br>
+      Desde la app puedes ajustar cuando quieras:
+      <ul>
+        <li><strong>Calidad de imagen:</strong> 8, 12 o 24 MP según el detalle que necesites.</li>
+        <li><strong>Flash LED:</strong> <em>Medio</em> (30 LEDs, distancias cortas) o <em>Máximo</em> (60 LEDs, hasta 20 metros de visión nocturna).</li>
+        <li><strong>Inteligencia artificial:</strong> alertas automáticas si detecta personas, animales o vehículos.</li>
+      </ul>
+      <strong>Consejo:</strong> Si usas pilas recargables NiMH, ve a <strong>Menú → Otros → Pilas</strong> y selecciona "Recargable" para que la cámara calcule bien el nivel de batería.`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA CHEROKEE — CONFIGURAR CONEXIÓN
+  // ================================================================
+  conexion_cherokee_inicio: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Conexión Cherokee",
+    pregunta: "En modo SETUP, ¿la pantalla muestra las barras de cobertura 4G sin ningún mensaje de error?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, hay cobertura 4G",               destino: "conexion_cherokee_prueba" },
+      { texto: "No, aparece 'Error de detección SIM'", destino: "apn_cherokee" }
+    ]
+  },
+
+  conexion_cherokee_prueba: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Prueba de envío",
+    pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Verás 'Enviando por FTP...' unos segundos. ¿Después aparece el mensaje 'Enviado con éxito'?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_cherokee" },
+      { texto: "No, da error o se queda colgado", destino: "pre_soporte_apn"                 }
+    ]
+  },
+
+  conexion_cherokee_final: {
+    tipo: "final",
+    breadcrumbLabel: "Conectada",
+    resultadoTexto: "Tu cámara Cherokee ya tiene conexión 4G activa. Puedes comprobarlo pulsando OK en modo SETUP: si aparece 'Enviado con éxito', la transmisión funciona correctamente.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  conexion_creek_sin_internet: {
+    tipo: "final",
+    breadcrumbLabel: "Sin conectividad",
+    resultadoTexto: "La cámara Creek no dispone de tarjeta SIM: funciona únicamente en local, guardando las fotos y vídeos en la tarjeta SD. Para verlos, debes retirar la tarjeta SD e introducirla en tu móvil/ordenador. No hay ninguna conexión que configurar en este modelo.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA CHEROKEE — CONFIGURAR ENVÍO DE FOTOS
+  // ================================================================
+  envio_cherokee_vincular: {
+    tipo: "paso",
+    breadcrumbLabel: "Vincular app",
+    texto: `Para enviar fotos a la app Renyn, la cámara debe estar vinculada:
+      <ul>
+        <li>Pon el interruptor en posición <strong>SETUP</strong>.</li>
+        <li>Pulsa <strong>MENU → CAM → Instalar</strong>.</li>
+        <li>Escanea el <strong>código QR</strong> que aparece en pantalla desde la app Renyn ("Añadir cámara").</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "envio_cherokee_prueba",
+    textoBoton: "Ya está vinculada, siguiente"
+  },
+
+  envio_cherokee_prueba: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Prueba de envío",
+    pregunta: "Estando en modo SETUP con cobertura 4G, pulsa el botón OK. Primero verás 'Enviando por FTP...' durante unos segundos. ¿Después aparece el mensaje 'Enviado con éxito'?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, enviado con éxito",          destino: "verificar_foto_cherokee" },
+      { texto: "No, da error o no hay cobertura", destino: "apn_cherokee" }
+    ]
+  },
+
+  envio_cherokee_final: {
+    tipo: "final",
+    breadcrumbLabel: "Envío activo",
+    resultadoTexto: "Perfecto, tu cámara Cherokee ya está enviando fotos correctamente a la plataforma Renyn. Recuerda deslizar el interruptor a ON para que empiece a disparar por detección de movimiento.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  envio_creek_sin_app: {
+    tipo: "final",
+    breadcrumbLabel: "Sin app",
+    resultadoTexto: "La cámara Creek no tiene SIM, por lo que no es compatible con el envío de fotos a través de la app Renyn Systems. Las fotos y vídeos solo se guardan en la tarjeta SD y se recuperan manualmente.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA APACHE — INSTALACIÓN COMPLETA
+  // ================================================================
+
+  // -- Hardware: paso 1/4 — Abrir --
+  instalar_apache_hw_abrir: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (1/4) — Abrir",
+    texto: `<strong>Paso 1 de 4 — Abre la cámara</strong><br><br>
+      Tira con cuidado de los <strong>cierres laterales</strong> para abrir la carcasa.<br><br>
+      Ten a mano todo lo que necesitas: <strong>tarjeta SIM, tarjeta SD, pilas AA y la antena</strong>.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_hw_sim",
+    textoBoton: "Cámara abierta, siguiente"
+  },
+
+  // -- Hardware: paso 2/4 — SIM --
+  instalar_apache_hw_sim: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (2/4) — SIM",
+    texto: `<strong>Paso 2 de 4 — Tarjeta SIM</strong><br><br>
+      La ranura SIM se encuentra en el <strong>lateral del cuerpo interno</strong> de la cámara (el chasis negro que queda expuesto al abrir la carcasa).<br><br>
+      La Apache utiliza <strong>Nano-SIM</strong> — el formato más pequeño. Si tu <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Tarjeta_SIM" target="_blank" rel="noopener">tarjeta SIM</a> viene en un tarjetón portador con varios tamaños troquelados, fíjate bien en las marcas antes de extraerla y rompe por la línea que corresponde al tamaño <em>más pequeño</em>.<br><br>
+      Desliza la SIM en la ranura hasta que encaje. Si es de Renyn la conexión será automática; con otro operador, configuraremos el APN más adelante.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_hw_sd",
+    textoBoton: "SIM insertada, siguiente"
+  },
+
+  // -- Hardware: paso 3/4 — SD --
+  instalar_apache_hw_sd: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (3/4) — SD",
+    texto: `<strong>Paso 3 de 4 — Tarjeta SD</strong><br><br>
+      La ranura SD se encuentra en la <strong>parte inferior del cuerpo interno</strong>. La Apache usa <strong><a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Secure_Digital" target="_blank" rel="noopener">Micro SD</a></strong> — el formato pequeño, de unos 15 × 11 mm. Admite tarjetas de <strong>hasta 128 GB</strong>.<br><br>
+      Debe estar formateada en <strong>FAT32</strong> (tarjetas de hasta 32 GB) o en <strong>exFAT</strong> (formato de fábrica para las de 64 GB o más).`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_hw_pilas",
+    textoBoton: "SD insertada, siguiente"
+  },
+
+  // -- Hardware: paso 4/4 — Pilas, antena y cierre --
+  instalar_apache_hw_pilas: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (4/4) — Pilas y antena",
+    texto: `<strong>Paso 4 de 4 — Pilas, cierre y antena</strong><br><br>
+      <strong>1.</strong> Coloca las <strong>pilas AA</strong> en el compartimento respetando la polaridad marcada (los símbolos + y – en la carcasa). Usa pilas alcalinas o NiMH recargables de buena calidad; no mezcles nuevas con usadas.<br><br>
+      <strong>2.</strong> Cierra la carcasa asegurando los cierres laterales.<br><br>
+      <strong>3.</strong> Retira el protector de la <strong>antena</strong> y enróscala en la parte superior de la cámara. <strong>No enciendas la cámara sin la antena</strong>, podrías dañar el módulo de transmisión.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_descargar_app",
+    textoBoton: "Hardware listo, siguiente"
+  },
+
+  // -- App: descarga --
+  instalar_apache_descargar_app: {
+    tipo: "paso",    breadcrumbLabel: "App — Descarga",
+    texto: `<strong>Descarga la app Renyn</strong><br><br>
+      Abre la tienda de tu móvil (<strong>App Store</strong> en iPhone o <strong>Google Play</strong> en Android), busca <strong>Renyn</strong> y descárgala. Es la misma aplicación que para la Cherokee.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_app",
+    textoBoton: "App instalada, siguiente"
+  },
+
+  // -- Vincular: paso 1/3 — TEST --
+  instalar_apache_app: {
+    tipo: "paso",    breadcrumbLabel: "Vincular (1/3) — TEST",
+    texto: `<strong>Paso 1 de 3 — Pon la cámara en modo TEST</strong><br><br>
+      Desliza el interruptor a la posición <strong>TEST</strong> (en la Apache este modo se llama TEST, no SETUP) y espera a que aparezca la imagen en la pantalla de la cámara.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_app_menu",
+    textoBoton: "Pantalla encendida, siguiente"
+  },
+
+  // -- Vincular: paso 2/3 — Menú --
+  instalar_apache_app_menu: {
+    tipo: "paso",    breadcrumbLabel: "Vincular (2/3) — Menú",
+    texto: `<strong>Paso 2 de 3 — Accede al menú de instalación</strong><br><br>
+      Pulsa el botón <strong>MENU</strong> en la cámara y selecciona la opción <strong>Instalar</strong>.<br><br>
+      <em>Recuerda: el botón MENU también sirve para volver un paso atrás mientras navegas por los ajustes.</em>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_app_qr",
+    textoBoton: "Opción seleccionada, siguiente"
+  },
+
+  // -- Vincular: paso 3/3 — QR --
+  instalar_apache_app_qr: {
+    tipo: "paso",    breadcrumbLabel: "Vincular (3/3) — QR",
+    texto: `<strong>Paso 3 de 3 — Escanea el código QR</strong><br><br>
+      La cámara mostrará un <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/C%C3%B3digo_QR" target="_blank" rel="noopener">código QR</a> en pantalla. Abre la app Renyn en tu móvil, pulsa <strong>"Añadir cámara"</strong> y escanéalo para completar el registro.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_red",
+    textoBoton: "Cámara vinculada, siguiente"
+  },
+
+  // -- Red --
+  instalar_apache_red: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Red",
+    pregunta: "En modo TEST, ¿qué ves en pantalla donde deberían aparecer las barras de cobertura 4G?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Barras de cobertura 4G sin mensajes de error",   destino: "instalar_apache_sync_qr"          },
+      { texto: "Icono de SIM en rojo",                           destino: "instalar_apache_sim_rojo"         },
+      { texto: "Interrogación (?) sobre las barras de cobertura", destino: "instalar_apache_sim_interrogacion" }
+    ]
+  },
+
+  instalar_apache_sim_rojo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "SIM en rojo — reinsertar",
+    pregunta: "Vamos a comprobar la SIM. Sigue estos pasos y dinos el resultado:",
+    descripcion: `El icono en rojo significa que la cámara no detecta ninguna tarjeta.
+      <ol>
+        <li>Pon el interruptor en <strong>OFF</strong> y abre la carcasa.</li>
+        <li>Retira la <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Tarjeta_SIM" target="_blank" rel="noopener">nano-SIM</a> de la ranura lateral. Comprueba que el tamaño sea el más pequeño de los troquelados en el tarjetón.</li>
+        <li>Vuelve a insertarla con cuidado hasta notar que encaja.</li>
+        <li>Cierra la carcasa y pon el interruptor en <strong>TEST</strong>.</li>
+      </ol>`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "He reinsertado la SIM y ahora hay cobertura", destino: "instalar_apache_sync_qr"         },
+      { texto: "He reinsertado la SIM y sigue en rojo",       destino: "instalar_apache_sim_sigue_rojo" }
+    ]
+  },
+
+  instalar_apache_sim_sigue_rojo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "SIM no detectada",
+    pregunta: "La cámara sigue sin detectar ninguna SIM. ¿Qué quieres hacer?",
+    descripcion: `Comprueba una vez más que la tarjeta está completamente encajada en la ranura y que el tamaño es el correcto (nano-SIM, el más pequeño). Si todo parece correcto y el icono sigue en rojo, es posible que haya un problema con la ranura o la tarjeta.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Volver a intentarlo",      destino: "instalar_apache_sim_rojo" },
+      { texto: "Contactar con soporte",    destino: "pre_soporte_sim"          }
+    ]
+  },
+
+  instalar_apache_sim_interrogacion: {
+    tipo: "pregunta",
+    breadcrumbLabel: "SIM detectada — activación",
+    pregunta: "¿Está activa la tarjeta SIM?",
+    descripcion: `Una SIM está activa cuando tiene una tarifa móvil en vigor con datos habilitados. Las tarifas tienen una periodicidad de pago (mensual, trimestral…); si el período ha vencido y no se ha renovado, la SIM queda inactiva y la cámara no puede conectarse aunque la detecte correctamente.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "No, puede que esté inactiva o caducada", destino: "apache_sim_inactiva_final"    },
+      { texto: "Sí, está activa y tiene datos",           destino: "apache_sim_es_renyn" }
+    ]
+  },
+
+  // -- APN manual --
+  apn_apache: {
+    tipo: "paso",
+    breadcrumbLabel: "APN manual",
+    texto: `Configura la red manualmente:
+      <ul>
+        <li>Ve a <strong>Red → SIM Detección Auto → Manual</strong>.</li>
+        <li>Entra en <strong>SIM Config. Manual → 4G</strong>.</li>
+        <li>Introduce el <a class="ftw-glosario" href="https://comunidad.movistar.es/kb/soporte_movil/c%C3%B3mo-configurar-el-apn-de-movistar-en-tu-m%C3%B3vil-paso-a-paso-2025%E2%9C%85/3616275" target="_blank" rel="noopener">APN</a>, usuario y contraseña de tu operadora.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: ctx => ctx.instalar_apache_sim_interrogacion ? "instalar_apache_sync_qr" : "conexion_apache_sync_qr",
+    textoBoton: "APN configurado, siguiente"
+  },
+
+  // -- Verificación nube --
+  instalar_apache_sync_qr: {
+    tipo: "paso",
+    breadcrumbLabel: "Sincronizar con la app",
+    texto: `<strong>Escanea el QR para sincronizar la cámara con la app</strong><br><br>
+      Aunque ya hayas escaneado el QR antes, es necesario hacerlo de nuevo una vez confirmada la cobertura para que la cámara quede correctamente registrada:<br><br>
+      <ol>
+        <li>Pulsa <strong>MENU → Instalar</strong> en la cámara.</li>
+        <li>Abre la app Renyn en tu móvil, pulsa <strong>"Añadir cámara"</strong> y escanea el código QR que aparece en pantalla.</li>
+        <li>Espera unos segundos a que la sincronización se complete.</li>
+      </ol>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_apache_nube_check",
+    textoBoton: "QR escaneado, comprobar pantalla"
+  },
+
+  instalar_apache_nube_check: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificación — Nube",
+    pregunta: "¿Ves en pantalla una nube azul con un tick blanco?",
+    descripcion: `Este icono confirma que la cámara está sincronizada con la app Renyn y tiene cobertura activa. Si aún no aparece, puede que la sincronización no se haya completado correctamente.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, veo la nube azul con tick blanco", destino: "verificar_foto_apache_instalar" },
+      { texto: "No aparece la nube",                   destino: "pre_soporte_nube"       }
+    ]
+  },
+
+  // -- Final --
+  instalar_apache_final: {
+    tipo: "final",
+    breadcrumbLabel: "Activar",
+    resultadoTexto: `¡Última fase! Desliza el interruptor a la posición <strong>ON</strong>. La cámara quedará lista para disparar por detección de movimiento.<br><br>
+      Desde la app puedes ajustar cuando quieras:
+      <ul>
+        <li><strong>Calidad de imagen:</strong> 8, 16 o 24 MP.</li>
+        <li><strong>Vídeo:</strong> hasta 2,7K a 30 FPS — la mejor resolución de vídeo de la gama Renyn.</li>
+        <li><strong>Velocidad de disparo:</strong> 0,2 segundos — la más rápida de las tres cámaras.</li>
+        <li><strong>Flash LED:</strong> 28 LEDs infrarrojos invisibles (940 nm), alcance de hasta 20 metros.</li>
+      </ul>
+      <strong>Consejo:</strong> Si usas pilas recargables NiMH, ve a <strong>Menú → Otros → Pilas</strong> y selecciona "Recargable" para que la cámara calcule bien el nivel de batería.`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA APACHE — CONFIGURAR CONEXIÓN
+  // ================================================================
+  conexion_apache_inicio: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Conexión Apache",
+    pregunta: "En modo TEST, ¿qué ves en pantalla donde deberían aparecer las barras de cobertura 4G?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Barras de cobertura 4G sin mensajes de error",    destino: "conexion_apache_sync_qr"          },
+      { texto: "Icono de SIM en rojo",                            destino: "conexion_apache_sim_rojo"         },
+      { texto: "Interrogación (?) sobre las barras de cobertura",  destino: "conexion_apache_sim_interrogacion" }
+    ]
+  },
+
+  conexion_apache_sim_rojo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "SIM en rojo — reinsertar",
+    pregunta: "Vamos a comprobar la SIM. Sigue estos pasos y dinos el resultado:",
+    descripcion: `El icono en rojo significa que la cámara no detecta ninguna tarjeta.
+      <ol>
+        <li>Pon el interruptor en <strong>OFF</strong> y abre la carcasa.</li>
+        <li>Retira la <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Tarjeta_SIM" target="_blank" rel="noopener">nano-SIM</a> de la ranura lateral. Comprueba que el tamaño sea el más pequeño de los troquelados en el tarjetón.</li>
+        <li>Vuelve a insertarla con cuidado hasta notar que encaja.</li>
+        <li>Cierra la carcasa y pon el interruptor en <strong>TEST</strong>.</li>
+      </ol>`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "He reinsertado la SIM y ahora hay cobertura", destino: "conexion_apache_sync_qr"         },
+      { texto: "He reinsertado la SIM y sigue en rojo",       destino: "conexion_apache_sim_sigue_rojo" }
+    ]
+  },
+
+  conexion_apache_sim_sigue_rojo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "SIM no detectada",
+    pregunta: "La cámara sigue sin detectar ninguna SIM. ¿Qué quieres hacer?",
+    descripcion: `Comprueba una vez más que la tarjeta está completamente encajada en la ranura y que el tamaño es el correcto (nano-SIM, el más pequeño). Si todo parece correcto y el icono sigue en rojo, es posible que haya un problema con la ranura o la tarjeta.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Volver a intentarlo",   destino: "conexion_apache_sim_rojo" },
+      { texto: "Contactar con soporte", destino: "pre_soporte_sim"          }
+    ]
+  },
+
+  conexion_apache_sim_interrogacion: {
+    tipo: "pregunta",
+    breadcrumbLabel: "SIM detectada — activación",
+    pregunta: "¿Está activa la tarjeta SIM?",
+    descripcion: `Una SIM está activa cuando tiene una tarifa móvil en vigor con datos habilitados. Las tarifas tienen una periodicidad de pago (mensual, trimestral…); si el período ha vencido y no se ha renovado, la SIM queda inactiva y la cámara no puede conectarse aunque la detecte correctamente.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "No, puede que esté inactiva o caducada", destino: "apache_sim_inactiva_final"    },
+      { texto: "Sí, está activa y tiene datos",           destino: "apache_sim_es_renyn" }
+    ]
+  },
+
+  conexion_apache_sync_qr: {
+    tipo: "paso",
+    breadcrumbLabel: "Sincronizar con la app",
+    texto: `<strong>Escanea el QR para sincronizar la cámara con la app</strong><br><br>
+      Es necesario escanear el QR una vez confirmada la cobertura para que la cámara quede correctamente registrada en la app Renyn:<br><br>
+      <ol>
+        <li>Pulsa <strong>MENU → Instalar</strong> en la cámara.</li>
+        <li>Abre la app Renyn en tu móvil, pulsa <strong>"Añadir cámara"</strong> y escanea el código QR que aparece en pantalla.</li>
+        <li>Espera unos segundos a que la sincronización se complete.</li>
+      </ol>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "conexion_apache_nube_check",
+    textoBoton: "QR escaneado, comprobar pantalla"
+  },
+
+  conexion_apache_nube_check: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificación — Nube",
+    pregunta: "¿Ves en pantalla una nube azul con un tick blanco?",
+    descripcion: `Este icono confirma que la cámara está sincronizada con la app Renyn y tiene cobertura activa. Si aún no aparece, puede que la sincronización no se haya completado correctamente.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, veo la nube azul con tick blanco", destino: "verificar_foto_apache_conexion" },
+      { texto: "No aparece la nube",                   destino: "pre_soporte_nube"       }
+    ]
+  },
+
+  conexion_apache_final: {
+    tipo: "final",
+    breadcrumbLabel: "Conectada",
+    resultadoTexto: "Tu cámara Apache ya tiene conexión 4G activa. Puedes verificarlo en modo TEST: si ves la <strong>nube azul con tick blanco</strong> en pantalla, la cámara está sincronizada y la transmisión funciona correctamente.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA APACHE — CONFIGURAR ENVÍO DE FOTOS
+  // ================================================================
+  envio_apache_vincular: {
+    tipo: "paso",
+    breadcrumbLabel: "Vincular app",
+    texto: `Para enviar fotos a la app Renyn, la cámara debe estar vinculada:
+      <ul>
+        <li>Pon el interruptor en posición <strong>TEST</strong>.</li>
+        <li>Pulsa <strong>MENU → Instalar</strong>.</li>
+        <li>Escanea el <strong>código QR</strong> que aparece en pantalla desde la app Renyn ("Añadir cámara").</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "envio_apache_nube_check",
+    textoBoton: "Ya está vinculada, siguiente"
+  },
+
+  envio_apache_nube_check: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificación — Nube",
+    pregunta: "¿Ves en pantalla una nube azul con un tick blanco?",
+    descripcion: `Este icono confirma que la cámara está vinculada a la app Renyn y tiene cobertura. Es la señal de que el envío de fotos está activo y funcionando.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, veo la nube azul con tick blanco", destino: "verificar_foto_apache_envio" },
+      { texto: "No aparece la nube",                   destino: "pre_soporte_nube"    }
+    ]
+  },
+
+  envio_apache_final: {
+    tipo: "final",
+    breadcrumbLabel: "Envío activo",
+    resultadoTexto: "Perfecto, tu cámara Apache ya está enviando fotos a la plataforma Renyn. Recuerda deslizar el interruptor a ON para que empiece a disparar por detección de movimiento.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // APACHE — NODOS COMPARTIDOS DE SIM (instalación y conexión)
+  // ================================================================
+
+  apache_sim_inactiva_final: {
+    tipo: "final",
+    breadcrumbLabel: "SIM inactiva",
+    resultadoTexto: `La <a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Tarjeta_SIM" target="_blank" rel="noopener">SIM</a> no tiene servicio activo en este momento, por lo que la cámara no puede conectarse a la red.<br><br>
+      Tienes dos opciones:
+      <ul>
+        <li><strong>Activar tu SIM actual:</strong> contacta con tu operadora y comprueba que la tarifa está en vigor y tiene datos móviles habilitados.</li>
+        <li><strong>Adquirir una SIM de Renyn:</strong> compatible y lista para usar desde el primer momento. Contacta con el equipo de Renyn para solicitarla.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  apache_sim_es_renyn: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Origen de la SIM",
+    pregunta: "¿La tarjeta SIM es de Renyn?",
+    descripcion: `Considera que es de Renyn si vino incluida con la cámara o si la adquiriste a través de la web de Renyn.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "No, es de otra operadora",                     destino: "apn_apache"              },
+      { texto: "Sí, la compré en Renyn o vino con la cámara",  destino: "apache_sim_renyn_tipo"   }
+    ]
+  },
+
+  apache_sim_renyn_tipo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Tipo de SIM Renyn",
+    pregunta: "¿Qué tipo de SIM de Renyn es?",
+    descripcion: `Las SIM de Renyn pueden ser de dos tipos: <strong>solo Movistar</strong>, que opera únicamente con la red de Movistar, o <strong>multioperadora</strong>, que selecciona automáticamente la red con mejor cobertura disponible en cada zona.`,
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Solo Movistar",   destino: "apn_apache"       },
+      { texto: "Multioperadora",  destino: "apache_sim_multioperadora"  }
+    ]
+  },
+
+  apache_sim_multioperadora: {
+    tipo: "paso",
+    breadcrumbLabel: "SIM multioperadora",
+    texto: `Las SIM multioperadora de Renyn se conectan automáticamente a la mejor red disponible. Si aparece la interrogación puede que la cámara necesite reiniciarse para actualizar la conexión, o volver a vincularse con la app:<br><br>
+      <ol>
+        <li>Pon el interruptor en <strong>OFF</strong>, espera unos segundos y vuelve a ponerlo en <strong>TEST</strong>.</li>
+        <li>Si la interrogación persiste, pulsa <strong>MENU → Instalar</strong> y escanea el código QR desde la app Renyn para revincular la cámara.</li>
+        <li>Espera unos segundos a que la cámara intente conectarse.</li>
+      </ol>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "apache_sim_multioperadora_check",
+    textoBoton: "Hecho, comprobar resultado"
+  },
+
+  apache_sim_multioperadora_check: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Resultado",
+    pregunta: "¿Aparecen ya las barras de cobertura en pantalla y una nube azul con un tick blanco?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, veo las barras y la nube azul con tick", destino: "apache_sim_multioperadora_ok" },
+      { texto: "No, sigue sin funcionar",                    destino: "soporte_directo"              }
+    ]
+  },
+
+  apache_sim_multioperadora_ok: {
+    tipo: "final",
+    breadcrumbLabel: "Conexión establecida",
+    resultadoTexto: `¡Conexión establecida! Ya puedes poner la cámara en <strong>ON</strong> para que empiece a disparar por detección de movimiento. Las fotos llegarán automáticamente a la app Renyn cuando la cámara detecte actividad.`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA CREEK — INSTALACIÓN COMPLETA
+  // La Creek no tiene SIM, no tiene app y no lleva antena.
+  // Las fotos se guardan en la SD y se recuperan manualmente.
+  // ================================================================
+
+  // -- Paso 1/3 — Abrir --
+  instalar_creek_abrir: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (1/3) — Abrir",
+    texto: `<strong>Paso 1 de 3 — Abre la cámara</strong><br><br>
+      Tira con cuidado de los <strong>cierres</strong> para abrir la carcasa.<br><br>
+      La Creek <strong>no usa tarjeta SIM ni antena</strong>. Solo necesitas: <strong>tarjeta SD y pilas AA</strong>.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_creek_sd",
+    textoBoton: "Cámara abierta, siguiente"
+  },
+
+  // -- Paso 2/3 — SD --
+  instalar_creek_sd: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (2/3) — SD",
+    texto: `<strong>Paso 2 de 3 — Tarjeta SD</strong><br><br>
+      La ranura SD se encuentra en la <strong>parte inferior del cuerpo interno</strong>. La Creek usa <strong><a class="ftw-glosario" href="https://es.wikipedia.org/wiki/Secure_Digital" target="_blank" rel="noopener">Micro SD</a></strong> — el formato pequeño, de unos 15 × 11 mm. Admite tarjetas de <strong>hasta 128 GB</strong>.<br><br>
+      Usa una tarjeta formateada en <strong>FAT32</strong> (para tarjetas de hasta 32 GB) o en su <strong>formato de fábrica exFAT</strong> (para las de 64 GB o más).<br><br>
+      Si la tarjeta tiene pestaña de bloqueo lateral, comprueba que está en posición desbloqueada.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_creek_pilas",
+    textoBoton: "SD insertada, siguiente"
+  },
+
+  // -- Paso 3/3 — Pilas y cierre --
+  instalar_creek_pilas: {
+    tipo: "paso",    breadcrumbLabel: "Hardware (3/3) — Pilas y cierre",
+    texto: `<strong>Paso 3 de 3 — Pilas y cierre</strong><br><br>
+      Coloca las <strong>pilas AA</strong> en el compartimento respetando la polaridad marcada en la carcasa (los símbolos + y –). Usa pilas alcalinas de buena calidad; no mezcles nuevas con usadas ni de distintas marcas.<br><br>
+      Cierra la carcasa asegurando los cierres. <strong>No hace falta antena</strong> — la Creek no tiene módulo de red.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "instalar_creek_final",
+    textoBoton: "Hardware listo, siguiente"
+  },
+
+  // -- Final --
+  instalar_creek_final: {
+    tipo: "final",
+    breadcrumbLabel: "Activar",
+    resultadoTexto: `¡Lista! Antes de colocarla definitivamente, pon el interruptor en <strong>TEST</strong> para configurar los parámetros básicos (fecha, hora, calidad de imagen…). Cuando esté todo a tu gusto, desliza a <strong>ON</strong> y empezará a disparar por detección de movimiento.<br><br>
+      <strong>Cómo ver tus fotos y vídeos:</strong> La Creek no envía nada por internet. Todo se guarda en la tarjeta SD. Para recuperar las imágenes, apaga la cámara, retira la SD e introdúcela en tu móvil o en un ordenador con un lector de tarjetas.<br><br>
+      Lo que puedes ajustar en el menú:
+      <ul>
+        <li><strong>Calidad de imagen:</strong> hasta 24 MP — elige según el espacio que tengas en la SD.</li>
+        <li><strong>Flash LED:</strong> 10 LEDs infrarrojos invisibles (940 nm), alcance de unos 15 metros.</li>
+        <li><strong>Campo de visión:</strong> 80° — amplio, perfecto para caminos o bebederos.</li>
+      </ul>
+      <strong>Recuerda:</strong> La Creek no tiene SIM y no es compatible con la app Renyn Systems.`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // RAMA: PROBLEMAS / NO FUNCIONA (genérica para los 3 modelos)
+  // ================================================================
+  problema_tipo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Problema",
+    pregunta: "¿Qué tipo de problema tienes?",
+    incluirNinguna: true,
+    ningunaDestino: "soporte_directo",
+    opciones: [
+      { texto: "No enciende",                              destino: "problema_no_enciende"   },
+      { texto: "No hace fotos o se paró de disparar",      destino: "problema_no_fotos"      },
+      { texto: "Dispara fotos sin que haya nada",          destino: "problema_dispara_vacia" },
+      { texto: "No envía fotos al móvil o a la app",       destino: "problema_no_envia"      },
+      { texto: "Las fotos de noche son oscuras o borrosas",destino: "problema_nocturno"      },
+      { texto: "Veo un código de error en la pantalla (Cherokee)", destino: "errores_cherokee" }
+    ]
+  },
+
+  problema_no_enciende: {
+    tipo: "pregunta",
+    breadcrumbLabel: "No enciende",
+    pregunta: "¿Has probado con pilas nuevas (alcalinas o litio recomendadas)?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí", destino: "pre_soporte_hardware"        },
+      { texto: "No", destino: "problema_no_enciende_pilas" }
+    ]
+  },
+
+  problema_no_enciende_pilas: {
+    tipo: "final",
+    breadcrumbLabel: "Cambiar pilas",
+    resultadoTexto: "Sustituye las pilas por unas nuevas, preferiblemente de litio para mejor rendimiento en frío, y respeta la polaridad indicada. Vuelve a intentar encenderla.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  problema_no_fotos: {
+    tipo: "pregunta",
+    breadcrumbLabel: "No hace fotos",
+    pregunta: "¿Cuál de estas situaciones describe mejor el problema?",
+    incluirNinguna: true,
+    ningunaDestino: "soporte_directo",
+    opciones: [
+      { texto: "El interruptor está en ON pero no dispara nada",       destino: "problema_no_fotos_on"  },
+      { texto: "La tarjeta SD está llena o da error",                  destino: "problema_sd_llena"     },
+      { texto: "Se paró de hacer fotos y las pilas están casi vacías", destino: "problema_no_enciende_pilas" }
+    ]
+  },
+
+  problema_no_fotos_on: {
+    tipo: "final",
+    breadcrumbLabel: "ON sin disparar",
+    resultadoTexto: `Comprueba estos puntos uno a uno:
+      <ul>
+        <li>¿La tarjeta SD está bien insertada y tiene espacio libre?</li>
+        <li>¿El sensor PIR (el ojo de la cámara que detecta calor/movimiento) no está tapado por una rama, hoja o suciedad?</li>
+        <li>¿El modo de cámara está en <strong>Foto</strong> o <strong>Foto+Vídeo</strong>? Compruébalo en <strong>Menú → Cam → Modo de Cámara</strong>.</li>
+        <li>¿El sensor PIR está activado? <strong>Menú → PIR → Sensor PIR → Sí</strong>.</li>
+      </ul>
+      Si todo está bien y sigue sin disparar, formatea la SD desde la propia cámara: <strong>Menú → flecha arriba → Formato SD → Sí</strong>.`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  problema_sd_llena: {
+    tipo: "final",
+    breadcrumbLabel: "SD llena o error",
+    resultadoTexto: `<strong>Si la tarjeta SD está llena:</strong>
+      <ul>
+        <li>Activa la <strong>grabación cíclica</strong> para que la cámara borre las fotos más antiguas cuando se llene: <strong>Menú → Otros → SD Cíclica → Sí</strong>.</li>
+        <li>O retira la SD, copia las fotos al ordenador y fórmateala en FAT32.</li>
+      </ul>
+      <strong>Si la SD da error</strong> (o aparece el ERROR 403 en pantalla):
+      <ul>
+        <li>Asegúrate de que es de <strong>máximo 32 GB</strong> y está formateada en <strong>FAT32</strong>. Las SD de 64 GB o más no son compatibles.</li>
+        <li>Puedes formatearla desde la cámara: <strong>Menú → flecha arriba → Formato SD → Sí</strong>.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  problema_no_envia: {
+    tipo: "pregunta",
+    breadcrumbLabel: "No envía",
+    pregunta: "¿Tienes cobertura/señal suficiente en la ubicación donde está instalada la cámara?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí", destino: "soporte_directo"             },
+      { texto: "No", destino: "problema_no_envia_cobertura" }
+    ]
+  },
+
+  problema_no_envia_cobertura: {
+    tipo: "final",
+    breadcrumbLabel: "Cobertura",
+    resultadoTexto: "Si la señal es débil, intenta reubicar la cámara en un punto más alto o despejado. Recuerda que la antena debe estar siempre puesta y bien enroscada antes de encender la cámara.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  problema_dispara_vacia: {
+    tipo: "final",
+    breadcrumbLabel: "Fotos vacías",
+    resultadoTexto: `Es normal que a veces la cámara dispare sin que aparezca ningún animal o persona. El sensor detecta cambios de calor y movimiento, y cosas como el viento, las hojas o el sol del amanecer pueden activarlo.<br><br>
+      <strong>Qué puedes hacer:</strong>
+      <ul>
+        <li><strong>Baja la sensibilidad del sensor PIR:</strong> <strong>Menú → PIR → Sensibilidad → Baja</strong>. Es la configuración recomendada para caza y seguridad.</li>
+        <li><strong>Evita apuntar la cámara a zonas con hierba alta, ramas o cuerdas</strong> que se muevan con el viento.</li>
+        <li><strong>No la orientes hacia el sol naciente o poniente</strong>, el calor puede activar el sensor.</li>
+        <li><strong>Monta la cámara en un árbol grueso y estable</strong>, los árboles pequeños vibran con el viento y pueden provocar disparos falsos.</li>
+        <li>Si disparas cerca del agua, coloca la cámara más elevada; el reflejo puede activarla.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  problema_nocturno: {
+    tipo: "final",
+    breadcrumbLabel: "Fotos nocturnas",
+    resultadoTexto: `Las fotos nocturnas dependen mucho de la configuración del flash y del estado de las pilas.<br><br>
+      <strong>Qué puedes hacer:</strong>
+      <ul>
+        <li><strong>Pon el flash en Máximo:</strong> desde la app o en <strong>Menú → Cam → Flash Infrarrojo → Alto</strong>. Así se activan los 60 LEDs y cubres hasta 20 metros.</li>
+        <li><strong>Modo nocturno en Máximo:</strong> <strong>Menú → Cam → Modo Nocturno → Máx. Exposición</strong>. Esto amplía el alcance del flash pero puede haber algo de desenfoque si el animal se mueve muy rápido.</li>
+        <li><strong>Comprueba las pilas:</strong> los LEDs infrarrojos consumen mucha energía. Con pilas bajas la imagen nocturna empeora notablemente. Las pilas <strong>NiMH recargables de alta calidad</strong> dan mejores resultados en la noche que las alcalinas.</li>
+        <li><strong>No apuntes a espacios muy abiertos:</strong> el flash se "pierde" en el vacío. Funciona mejor si hay un árbol, pared o suelo a menos de 20 metros en el campo de visión.</li>
+        <li>Asegúrate de que no hay ninguna fuente de luz directa (farola, luna muy brillante) apuntando a la lente.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  // ================================================================
+  // CÓDIGOS DE ERROR — Cámara Cherokee
+  // ================================================================
+  errores_cherokee: {
+    tipo: "errores",
+    breadcrumbLabel: "Código de error",
+    errores: [
+      {
+        codigo: "100",
+        nombre: "Módulo de red sin respuesta",
+        que: "La parte interna que conecta la cámara con la red de datos no arrancó correctamente.",
+        causas: "Fallo temporal del software del módulo o daño físico interno.",
+        solucion: "Apaga la cámara por completo (interruptor a OFF), espera 10 segundos y vuelve a encenderla. Si el error persiste, puede necesitar actualización de firmware o revisión técnica. Contacta con soporte."
+      },
+      {
+        codigo: "101",
+        nombre: "Foto por mensaje (MMS) tardó demasiado",
+        que: "La cámara intentó enviarte una foto como mensaje de texto y no lo logró a tiempo.",
+        causas: "El APN de mensajes (MMS) no está bien configurado o la señal de red es inestable en ese momento.",
+        solucion: "Ve a <strong>Menú → Red → SIM Config. Manual → MMS → APN</strong> e introduce los datos de tu operadora. Puedes buscarlos en la web de tu compañía de teléfono o llamando a su atención al cliente."
+      },
+      {
+        codigo: "102",
+        nombre: "Foto por correo (SMTP) tardó demasiado",
+        que: "La cámara intentó enviar una foto por correo electrónico y no lo consiguió a tiempo.",
+        causas: "El APN 4G no está bien configurado o la señal de datos es lenta en ese lugar.",
+        solucion: "Ve a <strong>Menú → Red → SIM Config. Manual → 4G → APN</strong> y comprueba que los datos son correctos. Si sigues con el error, contacta con soporte para revisar el servidor de correo."
+      },
+      {
+        codigo: "103",
+        nombre: "Foto por FTP tardó demasiado",
+        que: "La cámara intentó subir una foto a la plataforma Renyn (FTP) y agotó el tiempo de espera.",
+        causas: "APN 4G incorrecto, señal lenta o datos del servidor FTP mal configurados.",
+        solucion: "Comprueba el APN 4G en <strong>Menú → Red → SIM Config. Manual → 4G → APN</strong>. Si el APN está bien, contacta con soporte para revisar la configuración del servidor."
+      },
+      {
+        codigo: "104",
+        nombre: "No pudo conectarse a la red",
+        que: "La cámara intentó registrarse en la red de datos y no lo consiguió.",
+        causas: "La tarjeta SIM no está activada, no hay cobertura suficiente en ese lugar, o la antena está mal conectada.",
+        solucion: "Prueba primero la SIM en un móvil normal para comprobar que tiene cobertura y datos activos. Si en el móvil funciona, comprueba que la antena de la cámara está bien enroscada y vuelve a intentarlo."
+      },
+      {
+        codigo: "200",
+        nombre: "Sin señal de red",
+        que: "La cámara no encuentra ninguna señal de red en ese lugar.",
+        causas: "Mala cobertura, antena dañada o mal conectada, o interferencias muy fuertes.",
+        solucion: "Lleva la cámara a un lugar con mejor cobertura para probar. Comprueba que la antena está bien enroscada. Si en otro lugar funciona, el problema es la cobertura en esa ubicación concreta."
+      },
+      {
+        codigo: "201",
+        nombre: "Señal de red muy baja",
+        que: "La cámara encuentra señal pero es demasiado débil para enviar fotos.",
+        causas: "Cobertura escasa en ese punto, antena dañada o interferencias.",
+        solucion: "Intenta colocar la cámara en un punto más elevado o despejado. Comprueba que la antena está bien enroscada. Si es posible, prueba con la antena de refuerzo opcional."
+      },
+      {
+        codigo: "202",
+        nombre: "Tarjeta SIM no detectada",
+        que: "La cámara no puede leer la tarjeta SIM.",
+        causas: "La SIM no está bien insertada, o si es una SIM tres-en-uno (tarjetón), el adaptador puede tener mal contacto.",
+        solucion: "Apaga la cámara, retira la SIM y vuelve a insertarla con cuidado hasta que encaje. Si usas adaptador, asegúrate de que está bien colocado. Si sigue sin detectarla, prueba con otra SIM. Si el problema persiste, la ranura puede estar dañada y hay que enviar a reparación."
+      },
+      {
+        codigo: "203",
+        nombre: "No pudo activar la tarjeta SIM",
+        que: "La cámara encontró la SIM pero no pudo activarla.",
+        causas: "La SIM tiene un código PIN activado, o el APN está mal configurado.",
+        solucion: "Inserta la SIM en un móvil y desactiva el PIN (ajustes del móvil → SIM → Bloqueo SIM). Después vuelve a probar en la cámara. Si no tiene PIN, comprueba el APN en <strong>Menú → Red → SIM Config. Manual → 4G</strong>."
+      },
+      {
+        codigo: "400",
+        nombre: "Envío de mensaje (MMS) fallido",
+        que: "La cámara intentó enviarte una foto como mensaje y falló por completo.",
+        causas: "El servicio MMS no está activado en tu tarjeta, no tienes saldo, o el APN MMS es incorrecto.",
+        solucion: "Llama a tu operadora para confirmar que tienes MMS activado y saldo suficiente. Luego comprueba el APN en <strong>Menú → Red → SIM Config. Manual → MMS → APN</strong>."
+      },
+      {
+        codigo: "401",
+        nombre: "Envío por correo (SMTP) fallido",
+        que: "La cámara intentó enviar la foto por correo electrónico y falló.",
+        causas: "La configuración del servidor de correo es incorrecta o hay un problema en el servidor.",
+        solucion: "Contacta con soporte para que revisen la configuración del servidor de correo (SMTP). No es algo que normalmente necesites tocar tú mismo."
+      },
+      {
+        codigo: "402",
+        nombre: "Envío por FTP fallido",
+        que: "La cámara intentó enviar la foto a la plataforma Renyn y no pudo.",
+        causas: "Los datos del servidor FTP (dirección, usuario o contraseña) son incorrectos o los permisos no están bien configurados.",
+        solucion: "Contacta con soporte para verificar la configuración del servidor. Puedes mencionar este código de error para agilizar la gestión."
+      },
+      {
+        codigo: "403",
+        nombre: "Error al leer la tarjeta SD",
+        que: "La cámara no puede leer o escribir en la tarjeta SD.",
+        causas: "La SD es mayor de 32 GB, no está formateada en FAT32, o la propia tarjeta está dañada.",
+        solucion: "Usa una tarjeta SD de <strong>máximo 32 GB</strong> y fórmateala en <strong>FAT32</strong>. Puedes formatearla desde la propia cámara: <strong>Menú → flecha arriba → Formato SD → Sí</strong>. Las tarjetas de 64 GB o más no son compatibles con esta cámara."
+      },
+      {
+        codigo: "500",
+        nombre: "Error de autenticación de red",
+        que: "La cámara no pudo autenticarse en la red de datos, normalmente por un error de configuración.",
+        causas: "El APN está mal configurado, no hay saldo de datos en la tarjeta, o la sesión de red expiró.",
+        solucion: "Comprueba el APN en <strong>Menú → Red → SIM Config. Manual → 4G → APN</strong>. Verifica también que tu tarjeta SIM tiene datos activos. Si llevas mucho tiempo sin usar la cámara, apaga y enciende para que la red se renegocie."
+      },
+      {
+        codigo: "600",
+        nombre: "Límite diario de fotos alcanzado",
+        que: "La cámara ha llegado al máximo de fotos que tiene configurado para enviar en un día.",
+        causas: "Hay un límite de envíos diarios configurado en el menú (útil para ahorrar datos, pero puede ser muy bajo).",
+        solucion: "Ve a <strong>Menú → Red → Max Núm/Día</strong> y sube el número al que necesites, o ponlo en <em>ilimitado</em>. Las fotos tomadas después del límite se siguen guardando en la SD; solo se dejaron de enviar."
+      }
+    ]
+  },
+
+  // ================================================================
+  // VERIFICACIÓN DE RECEPCIÓN EN APP
+  // ================================================================
+  verificar_foto_cherokee: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Cherokee?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",       destino: ctx => {
+          if(ctx.conexion_cherokee_prueba) return "conexion_cherokee_final";
+          if(ctx.envio_cherokee_prueba)    return "envio_cherokee_final";
+          return "instalar_cherokee_final";
+        }
+      },
+      { texto: "No, no aparece ninguna foto", destino: "pre_soporte_foto_no_llega" }
+    ]
+  },
+
+  verificar_foto_apache_conexion: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Apache?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",       destino: "conexion_apache_final" },
+      { texto: "No, no aparece ninguna foto", destino: "pre_soporte_foto_no_llega" }
+    ]
+  },
+
+  verificar_foto_apache_instalar: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Apache?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",         destino: "instalar_apache_final" },
+      { texto: "No, no aparece ninguna foto",   destino: "pre_soporte_foto_no_llega" }
+    ]
+  },
+
+  verificar_foto_apache_envio: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Verificar app",
+    pregunta: "Abre la app Renyn en tu móvil y espera unos segundos. ¿Aparece la foto recién enviada en la galería de tu cámara Apache?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, la veo en la app",         destino: "envio_apache_final"  },
+      { texto: "No, no aparece ninguna foto",   destino: "pre_soporte_foto_no_llega" }
+    ]
+  },
+
+  // ================================================================
+  // RAMA: PROBLEMAS — Apache
+  // ================================================================
+  problema_apache_tipo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Problema Apache",
+    pregunta: "¿Qué tipo de problema tienes?",
+    incluirNinguna: true,
+    ningunaDestino: "soporte_directo",
+    opciones: [
+      { texto: "No enciende",                               destino: "problema_no_enciende"     },
+      { texto: "No hace fotos o se paró de disparar",       destino: "problema_no_fotos"        },
+      { texto: "Dispara fotos sin que haya nada",           destino: "problema_dispara_vacia"   },
+      { texto: "No envía fotos al móvil o a la app",        destino: "problema_apache_no_envia" },
+      { texto: "Las fotos de noche son oscuras o borrosas", destino: "problema_nocturno"        }
+    ]
+  },
+
+  problema_apache_no_envia: {
+    tipo: "pregunta",
+    breadcrumbLabel: "No envía — Apache",
+    pregunta: "En modo TEST, ¿ves la nube azul con tick blanco en la pantalla de la cámara?",
+    incluirNinguna: false,
+    opciones: [
+      { texto: "Sí, veo la nube azul con tick blanco", destino: "soporte_directo"           },
+      { texto: "No aparece la nube",                   destino: "conexion_apache_situacion" }
+    ]
+  },
+
+  // ================================================================
+  // RAMA: PROBLEMAS — Creek
+  // ================================================================
+  problema_creek_tipo: {
+    tipo: "pregunta",
+    breadcrumbLabel: "Problema Creek",
+    pregunta: "¿Qué tipo de problema tienes?",
+    incluirNinguna: true,
+    ningunaDestino: "soporte_directo",
+    opciones: [
+      { texto: "No enciende",                               destino: "problema_no_enciende"   },
+      { texto: "No hace fotos o se paró de disparar",       destino: "problema_no_fotos"      },
+      { texto: "Dispara fotos sin que haya nada",           destino: "problema_dispara_vacia" },
+      { texto: "No encuentro las fotos en la tarjeta SD",   destino: "problema_creek_sd"      },
+      { texto: "Las fotos de noche son oscuras o borrosas", destino: "problema_nocturno"      }
+    ]
+  },
+
+  problema_creek_sd: {
+    tipo: "final",
+    breadcrumbLabel: "SD sin fotos",
+    resultadoTexto: `La Creek guarda sus fotos directamente en la tarjeta SD, sin enviarlas por internet.<br><br>
+      <strong>Si no ves fotos al meter la SD en el móvil u ordenador:</strong>
+      <ul>
+        <li>Asegúrate de que el interruptor estaba en <strong>ON</strong> y no en <strong>TEST</strong> o <strong>OFF</strong>. Solo dispara en modo ON.</li>
+        <li>Comprueba que el sensor PIR no estaba tapado y que hay actividad de movimiento dentro del ángulo de visión (80°).</li>
+        <li>Si la SD tiene pestaña de bloqueo lateral, comprueba que está en posición desbloqueada.</li>
+        <li>Prueba a leer la SD con otro dispositivo o con un lector de tarjetas en el ordenador.</li>
+        <li>Si la SD parece dañada, fórmateala en FAT32 desde el ordenador (se borrarán todos los datos) y vuelve a insertarla.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: ""
+  },
+
+  pre_soporte_sim: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — SIM",
+    texto: `<strong>Lo más probable: SIM dañada o ranura con problema físico</strong><br><br>
+      Cuando la cámara no detecta la SIM tras varios intentos, las causas habituales son:
+      <ul>
+        <li>La nano-SIM está mal cortada del tarjetón (tamaño incorrecto o bordes irregulares).</li>
+        <li>La ranura de la cámara está dañada o tiene suciedad que impide el contacto.</li>
+      </ul>
+      Antes de contactar, prueba a insertar esa misma SIM en un móvil. Si en el móvil funciona, el problema está en la ranura de la cámara.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_hardware: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — Hardware",
+    texto: `<strong>Lo más probable: problema de hardware</strong><br><br>
+      Si la cámara no enciende con pilas alcalinas nuevas, normalmente es por:
+      <ul>
+        <li>Contactos del compartimento de pilas oxidados o sucios.</li>
+        <li>Interruptor de encendido dañado.</li>
+        <li>Fallo en la placa interna.</li>
+      </ul>
+      Ten a mano la fecha de compra y el número de serie cuando contactes con soporte.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_apn: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — APN",
+    texto: `<strong>Lo más probable: error en los datos del APN o SIM sin datos activos</strong><br><br>
+      Si la cámara no consigue enviar la foto de prueba tras configurar el APN, suele ser por:
+      <ul>
+        <li>Un error tipográfico en el nombre del APN, usuario o contraseña.</li>
+        <li>La SIM no tiene un plan de datos activo o se ha agotado el bono.</li>
+        <li>El operador usa parámetros adicionales que no están en la configuración estándar.</li>
+      </ul>
+      Cuando contactes con soporte, ten a mano el nombre de tu operadora y los datos de APN que introdujiste.`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_foto_no_llega: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — Fotos",
+    texto: `<strong>Lo más probable: problema de sincronización entre la cámara y la app</strong><br><br>
+      La cámara ha completado el proceso correctamente, pero las fotos no aparecen en la app. Esto suele indicar:
+      <ul>
+        <li>La app necesita refrescarse — ciérrala completamente y vuelve a abrirla.</li>
+        <li>La foto llegó a otra sección: revisa <strong>Galería</strong> o <strong>Mis cámaras</strong> en todos los apartados.</li>
+        <li>Un problema puntual de sincronización entre la cámara y tu cuenta en el servidor.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  pre_soporte_nube: {
+    tipo: "paso",
+    breadcrumbLabel: "Diagnóstico — Nube",
+    texto: `<strong>Lo más probable: registro en la nube incompleto</strong><br><br>
+      La nube azul con tick no ha aparecido tras el escaneo del QR. Las causas más frecuentes son:
+      <ul>
+        <li>El servidor tardó en responder — espera 30 segundos y comprueba la pantalla de nuevo antes de continuar.</li>
+        <li>El QR se escaneó pero la vinculación de la cuenta no se completó en la app.</li>
+        <li>La cámara no tiene cobertura suficiente en ese momento para conectarse al servidor.</li>
+      </ul>`,
+    imagen: "", manualUrl: "", manualTexto: "",
+    siguiente: "soporte_directo",
+    textoBoton: "Contactar con soporte"
+  },
+
+  soporte_directo: {
+    tipo: "final",
+    breadcrumbLabel: "Soporte",
+    resultadoTexto: "Parece que tu caso necesita atención personalizada. Contacta directamente con nuestro soporte y te ayudaremos a resolverlo.",
+    imagen: "", manualUrl: "", manualTexto: ""
+  }
+
+};
+
+</script>
+
+<!-- ================================================================
+     BLOQUE 2 — MOTOR DEL ASISTENTE
+     No es necesario tocar este bloque para añadir contenido nuevo.
+     Solo modifícalo para cambiar comportamiento general o añadir
+     un nuevo tipo de nodo (ver instrucciones en Bloque 1).
+     ================================================================ -->
+<script>
+
+/* ----------------------------------------------------------------
+   ESTADO DE SESIÓN
+   historial: pila de ids de nodos visitados.
+   contexto:  respuestas del usuario. Clave = id del nodo pregunta,
+              valor = { texto, destino } de la opción elegida.
+   ---------------------------------------------------------------- */
+let historial = ["inicio"];
+let contexto  = {};
+
+/* ----------------------------------------------------------------
+   ICONOS SVG inline — Lucide (MIT), sin peticiones de red.
+   Uso: icon('nombre') dentro de cualquier template string.
+   Todos los paths son del estándar Lucide 0.475 (viewBox 0 0 24 24).
+   ---------------------------------------------------------------- */
+const ICONOS = {
+  camera:       '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  atras:        '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  reiniciar:    '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  ayuda:        '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+  siguiente:    '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  construccion: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  soporte:      '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+  check:        '<path d="M20 6 9 17l-5-5"/>',
+  cruz:         '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  mensaje:      '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  correo:       '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  fiesta:       '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>',
+  alerta:       '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>'
+};
+
+function icon(nombre, extraClass){
+  const cls = extraClass ? ` ${extraClass}` : "";
+  return `<svg class="ftw-icon${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${ICONOS[nombre] || ""}</svg>`;
+}
+
+/* ----------------------------------------------------------------
+   HELPERS DE NAVEGACIÓN
+   ---------------------------------------------------------------- */
+const elBody       = document.getElementById("ftw-body");
+const elBreadcrumb = document.getElementById("ftw-breadcrumb");
+const btnAtras     = document.getElementById("ftw-btn-atras");
+const btnReiniciar = document.getElementById("ftw-btn-reiniciar");
+
+function nodoActualId(){ return historial[historial.length - 1]; }
+
+function resolverDestino(destino){ return typeof destino === "function" ? destino(contexto) : destino; }
+
+function irANodo(idDestino, textoOpcion){
+  contexto[nodoActualId()] = { texto: textoOpcion, destino: idDestino };
+  historial.push(idDestino);
+  renderizar();
+}
+
+function volverAtras(){
+  if(historial.length > 1){
+    delete contexto[nodoActualId()];
+    historial.pop();
+    renderizar();
+  }
+}
+
+function reiniciar(){
+  historial = ["inicio"];
+  contexto  = {};
+  renderizar();
+}
+
+function actualizarBreadcrumb(){
+  const vistas = new Set();
+  const etiquetas = historial
+    .map(id => ARBOL[id]?.breadcrumbLabel)
+    .filter(Boolean)
+    .map(label => {
+      if(vistas.has(label)){ return label + " (2ª vez)"; }
+      vistas.add(label);
+      return label;
+    });
+  const sep = '<span class="ftw-crumb-sep">›</span>';
+  let partes;
+  if(etiquetas.length <= 4){
+    partes = etiquetas.map(e => `<span>${e}</span>`);
+  } else {
+    partes = [
+      `<span>${etiquetas[0]}</span>`,
+      `<span class="ftw-crumb-sep">•••</span>`,
+      `<span>${etiquetas[etiquetas.length - 2]}</span>`,
+      `<span>${etiquetas[etiquetas.length - 1]}</span>`
+    ];
+  }
+  elBreadcrumb.innerHTML = partes.join(sep);
+}
+
+function htmlContacto(oculto){
+  return `
+    <div id="ftw-contacto"${oculto ? ' style="display:none;"' : ''}>
+      Antes de nada, échale un vistazo a nuestros <a href="${CONFIG.manualesUrl}" target="_blank" rel="noopener"><strong>manuales completos</strong></a>, puede que ahí encuentres la solución más rápido.
+      <br><br>
+      Si aun así sigues sin resolverlo, contáctanos y te ayudamos personalmente:
+      <br><br>
+      ${icon("mensaje")}<a href="${CONFIG.whatsapp}" target="_blank" rel="noopener">WhatsApp</a><br>
+      ${icon("correo")}<a href="mailto:${CONFIG.email}">${CONFIG.email}</a>
+      <br>
+      <button class="ftw-btn-reiniciar-grande" id="ftw-reiniciar-desde-contacto">${icon("reiniciar")}Empezar de nuevo</button>
+    </div>`;
+}
+
+/* ----------------------------------------------------------------
+   RENDERIZADORES — mapa tipo → función.
+   Para añadir un tipo nuevo: define renderizarXxx y regístralo aquí.
+   ---------------------------------------------------------------- */
+function renderizarPregunta(nodo){
+  let html = `<div id="ftw-pregunta">${icon("ayuda")}${nodo.pregunta}</div>`;
+  if(nodo.descripcion) html += `<div class="ftw-pregunta-desc">${nodo.descripcion}</div>`;
+  html += `<div id="ftw-opciones">`;
+  nodo.opciones.forEach((op, i) => {
+    if(op.desc){
+      html += `<button class="ftw-btn ftw-btn--has-desc" data-index="${i}">
+        <span class="ftw-btn-inner">
+          <span>${op.texto}</span>
+          <span class="ftw-btn-desc">${op.desc}</span>
+        </span>
+        <span class="ftw-btn-chevron">›</span>
+      </button>`;
+    } else {
+      html += `<button class="ftw-btn" data-index="${i}"><span>${op.texto}</span><span class="ftw-btn-chevron">›</span></button>`;
+    }
+  });
+  if(nodo.incluirNinguna){
+    html += `<button class="ftw-btn ftw-btn-ninguna" data-ninguna><span>Ninguna de las anteriores</span><span class="ftw-btn-chevron">›</span></button>`;
+  }
+  if(nodo.opcionAlerta){
+    html += `<hr class="ftw-sep-errores">`;
+    html += `<button class="ftw-btn ftw-btn-errores" data-alerta>${icon("alerta")}<span>${nodo.opcionAlerta.texto}</span><span class="ftw-btn-chevron">›</span></button>`;
+  }
+  html += `</div>`;
+  elBody.innerHTML = html;
+
+  elBody.querySelectorAll(".ftw-btn[data-index]").forEach(btn => {
+    const op = nodo.opciones[parseInt(btn.dataset.index, 10)];
+    btn.addEventListener("click", () => irANodo(resolverDestino(op.destino), op.texto));
+  });
+  const btnNinguna = elBody.querySelector(".ftw-btn[data-ninguna]");
+  if(btnNinguna){
+    btnNinguna.addEventListener("click", () => irANodo(resolverDestino(nodo.ningunaDestino), "Ninguna de las anteriores"));
+  }
+  const btnAlerta = elBody.querySelector(".ftw-btn[data-alerta]");
+  if(btnAlerta){
+    btnAlerta.addEventListener("click", () => irANodo(resolverDestino(nodo.opcionAlerta.destino), nodo.opcionAlerta.texto));
+  }
+}
+
+function renderizarPaso(nodo){
+  let html = ``;
+  if(nodo.fase) html += `<div class="ftw-fase-header"><span class="ftw-fase-dot"></span>${nodo.fase}</div>`;
+  html += `<div id="ftw-paso-media">`;
+  if(nodo.imagen)    html += `<img src="${nodo.imagen}" alt="${nodo.breadcrumbLabel || ""}">`;
+  if(nodo.manualUrl) html += `<a class="ftw-manual-link" href="${nodo.manualUrl}" target="_blank" rel="noopener">${nodo.manualTexto || "Ver más información"}</a>`;
+  html += `</div>`;
+  html += `<div class="ftw-paso-bloque">${nodo.texto}</div>`;
+  html += `<div id="ftw-opciones"><button class="ftw-btn ftw-btn-siguiente" id="ftw-btn-sig">${icon("siguiente")}<span>${nodo.textoBoton || "Siguiente"}</span></button></div>`;
+  elBody.innerHTML = html;
+  document.getElementById("ftw-btn-sig").addEventListener("click", () => irANodo(resolverDestino(nodo.siguiente), nodo.textoBoton || "Siguiente"));
+}
+
+function renderizarPendiente(){
+  elBody.innerHTML = `
+    <div id="ftw-pendiente-box">${icon("construccion", "ftw-icon-naranja")}Rama pendiente de creación.</div>
+    <div id="ftw-opciones"><button class="ftw-btn ftw-btn-ninguna" id="ftw-pendiente-soporte">${icon("soporte")}Contactar con soporte mientras tanto</button></div>`;
+  document.getElementById("ftw-pendiente-soporte").addEventListener("click", () => irANodo("soporte_directo", "Soporte"));
+}
+
+function renderizarFinal(nodo){
+  let html = `<div id="ftw-resultado-media">`;
+  if(nodo.imagen)    html += `<img src="${nodo.imagen}" alt="${nodo.breadcrumbLabel || ""}">`;
+  if(nodo.manualUrl) html += `<a class="ftw-manual-link" href="${nodo.manualUrl}" target="_blank" rel="noopener">${nodo.manualTexto || "Ver más información"}</a>`;
+  html += `</div><div id="ftw-resultado-texto">${nodo.resultadoTexto}</div>`;
+
+  if(nodoActualId() !== "soporte_directo"){
+    html += `
+      <div id="ftw-satisfaccion">
+        <p>${icon("ayuda")}¿Has conseguido configurar/instalar tu cámara?</p>
+        <div id="ftw-opciones">
+          <button class="ftw-btn" id="ftw-sat-si">${icon("check")}Sí, todo resuelto</button>
+          <button class="ftw-btn ftw-btn-ninguna" id="ftw-sat-no">${icon("cruz")}No, sigo con dudas</button>
+        </div>
+      </div>
+      ${htmlContacto(true)}`;
+  } else {
+    html += htmlContacto(false);
+  }
+
+  elBody.innerHTML = html;
+
+  const btnSi = document.getElementById("ftw-sat-si");
+  const btnNo = document.getElementById("ftw-sat-no");
+
+  if(btnSi){
+    btnSi.addEventListener("click", () => {
+      elBody.innerHTML = `<div id="ftw-resultado-texto" style="text-align:center;padding:8px 0">${icon("fiesta")}<br><br>¡Genial! Nos alegra haberte ayudado.</div>`;
+      const btnNueva = document.createElement("button");
+      btnNueva.className = "ftw-btn ftw-btn-ninguna";
+      btnNueva.innerHTML = `${icon("reiniciar")}Tengo otra duda`;
+      btnNueva.style.marginTop = "12px";
+      btnNueva.addEventListener("click", reiniciar);
+      elBody.appendChild(btnNueva);
+    });
+  }
+  if(btnNo){
+    btnNo.addEventListener("click", () => {
+      document.getElementById("ftw-contacto").style.display = "block";
+      btnSi.disabled = true;
+      btnNo.disabled = true;
+    });
+  }
+
+  const btnReiniciarContacto = document.getElementById("ftw-reiniciar-desde-contacto");
+  if(btnReiniciarContacto) btnReiniciarContacto.addEventListener("click", reiniciar);
+}
+
+function renderizarErrores(nodo){
+  let html = `<div id="ftw-pregunta">${icon("ayuda")}Selecciona el código de error que ves en pantalla</div>`;
+  html += `<p class="ftw-errores-intro">Pulsa en el número del error para ver qué significa y cómo solucionarlo.</p>`;
+  html += `<div class="ftw-errores-grid">`;
+  nodo.errores.forEach((e, i) => {
+    html += `<button class="ftw-error-pill" data-err="${i}">ERROR ${e.codigo}</button>`;
+  });
+  html += `</div>`;
+  html += `<div id="ftw-error-detalle-box" class="ftw-error-detalle-box" hidden></div>`;
+  html += `<div id="ftw-opciones"><button class="ftw-btn ftw-btn-ninguna" id="ftw-err-soporte">${icon("soporte")}El error no aparece aquí — contactar soporte</button></div>`;
+
+  elBody.innerHTML = html;
+
+  const detalleBox = document.getElementById("ftw-error-detalle-box");
+  let activeIndex = null;
+
+  elBody.querySelectorAll(".ftw-error-pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.err, 10);
+      if(activeIndex === idx){
+        detalleBox.hidden = true;
+        btn.classList.remove("ftw-activo");
+        activeIndex = null;
+        return;
+      }
+      elBody.querySelectorAll(".ftw-error-pill").forEach(b => { b.classList.remove("ftw-activo"); });
+      btn.classList.add("ftw-activo");
+      activeIndex = idx;
+      const e = nodo.errores[idx];
+      detalleBox.innerHTML = `
+        <div class="ftw-error-titulo">ERROR ${e.codigo} — ${e.nombre}</div>
+        <span class="ftw-error-seccion">¿Qué significa?</span>${e.que}
+        <span class="ftw-error-seccion">Posible causa</span>${e.causas}
+        <span class="ftw-error-seccion">Qué hacer</span>${e.solucion}`;
+      detalleBox.hidden = false;
+    });
+  });
+
+  document.getElementById("ftw-err-soporte").addEventListener("click", () => irANodo("soporte_directo", "Soporte"));
+}
+
+const RENDERIZADORES = {
+  pregunta:  renderizarPregunta,
+  paso:      renderizarPaso,
+  pendiente: renderizarPendiente,
+  final:     renderizarFinal,
+  errores:   renderizarErrores
+};
+
+/* ----------------------------------------------------------------
+   RENDERIZAR — punto de entrada principal tras cada navegación.
+   ---------------------------------------------------------------- */
+function renderizar(){
+  const nodo = ARBOL[nodoActualId()];
+  if(!nodo){
+    elBody.innerHTML = `<div id="ftw-resultado-texto">Error: nodo "${nodoActualId()}" no encontrado en ARBOL.</div>`;
+    return;
+  }
+
+  const fn = RENDERIZADORES[nodo.tipo];
+  if(fn) fn(nodo);
+
+  elBody.classList.remove("ftw-animando");
+  void elBody.offsetWidth;
+  elBody.classList.add("ftw-animando");
+
+  actualizarBreadcrumb();
+  btnAtras.disabled = historial.length <= 1;
+}
+
+/* ── Toggle de tema ─────────────────────────────────────────── */
+const FTW_SVG_SOL  = `<svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
+const FTW_SVG_LUNA = `<svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+
+const btnTema  = document.getElementById("ftw-btn-tema");
+const elWidget = document.getElementById("ftw-widget");
+
+function aplicarTema(oscuro) {
+  elWidget.classList.toggle("ftw-light", !oscuro);
+  btnTema.innerHTML  = oscuro ? FTW_SVG_SOL : FTW_SVG_LUNA;
+  btnTema.setAttribute("aria-label",   oscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
+  btnTema.setAttribute("aria-pressed", String(!oscuro));
+  try { localStorage.setItem("ftw-tema", oscuro ? "oscuro" : "claro"); } catch(e) {}
+}
+
+const temaGuardado    = (() => { try { return localStorage.getItem("ftw-tema"); } catch(e) { return null; } })();
+const prefiereOscuro  = window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true;
+aplicarTema(temaGuardado ? temaGuardado === "oscuro" : prefiereOscuro);
+
+btnTema.addEventListener("click", () => aplicarTema(elWidget.classList.contains("ftw-light")));
+
+/* Inicialización */
+document.getElementById("ftw-soporte-fijo").href = CONFIG.whatsapp;
+btnAtras.addEventListener("click", volverAtras);
+btnReiniciar.addEventListener("click", reiniciar);
+renderizar();
+
+</script>
+
+HTML;
+}
+add_shortcode( 'renyn_asistente', 'renyn_asistente_shortcode' );
