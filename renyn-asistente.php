@@ -13,11 +13,11 @@ function renyn_asistente_shortcode() {
      ============================================================ */
   :root {
     --bg:             #09090b;
-    --surface:        #111115;
-    --surface-2:      #17171d;
-    --surface-3:      #1d1d26;
-    --border:         #26263a;
-    --border-subtle:  #1a1a26;
+    --surface:        #1c1c28;
+    --surface-2:      #222230;
+    --surface-3:      #28283c;
+    --border:         #353552;
+    --border-subtle:  #252538;
     --text:           #f0f0f6;
     --text-2:         #8888a8;
     --text-3:         #4e4e66;
@@ -31,19 +31,25 @@ function renyn_asistente_shortcode() {
     --green-bg:       rgba(34,197,94,.1);
     --green-border:   rgba(34,197,94,.3);
     --green-text:     #4ade80;
-    --radius:         22px;
-    --radius-md:      14px;
-    --radius-sm:      10px;
-    --radius-xs:      7px;
+    --radius:         18px;
+    --radius-md:      12px;
+    --radius-sm:      9px;
+    --radius-xs:      6px;
     --pill:           100px;
-    --width:          540px;
+    --width:          680px;
     --ease:           cubic-bezier(.4,0,.2,1);
+    --ease-spring:    cubic-bezier(.34,1.56,.64,1);
+    /* Sombras tokenizadas para que la animación funcione en ambos temas */
+    --sombra-widget:  0 0 0 1px var(--border), 0 8px 30px rgba(0,0,0,.5), 0 0 60px rgba(220,38,38,.1);
+    --sombra-glow:    0 0 0 1px var(--red-border), 0 8px 30px rgba(0,0,0,.5), 0 0 90px rgba(220,38,38,.4);
+    --scan-grad:      linear-gradient(90deg, transparent, var(--red-h) 20%, #fff 50%, var(--red-h) 80%, transparent);
   }
 
   *, *::before, *::after { box-sizing: border-box; }
 
   /* ── Contenedor principal ──────────────────────────────────── */
   #ftw-widget {
+    position: relative;
     width: var(--width);
     max-width: 100%;
     margin: 0 auto;
@@ -53,7 +59,7 @@ function renyn_asistente_shortcode() {
     font-family: -apple-system, 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
     color: var(--text);
     overflow: hidden;
-    box-shadow: 0 0 0 1px var(--border-subtle), 0 12px 48px rgba(0,0,0,.55);
+    box-shadow: var(--sombra-widget);
   }
 
   /* ── Cabecera ─────────────────────────────────────────────── */
@@ -62,7 +68,7 @@ function renyn_asistente_shortcode() {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 16px 22px;
+    padding: 12px 20px;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
   }
@@ -107,13 +113,13 @@ function renyn_asistente_shortcode() {
     gap: 2px;
     flex-wrap: nowrap;
     overflow: hidden;
-    padding: 9px 22px;
+    padding: 8px 20px;
     font-size: .7rem;
     font-weight: 500;
     color: var(--text-3);
     letter-spacing: .3px;
     border-bottom: 1px solid var(--border-subtle);
-    min-height: 36px;
+    min-height: 34px;
   }
   #ftw-breadcrumb span {
     white-space: nowrap;
@@ -131,7 +137,7 @@ function renyn_asistente_shortcode() {
 
   /* ── Cuerpo ───────────────────────────────────────────────── */
   #ftw-body {
-    padding: 28px 22px 24px;
+    padding: 24px 20px 20px;
   }
 
   /* ── Iconos SVG inline (Lucide) ───────────────────────────── */
@@ -194,7 +200,7 @@ function renyn_asistente_shortcode() {
     background: var(--red-bg);
     border-color: var(--red-border);
     color: #fff;
-    transform: translateX(3px);
+    transform: translateX(2px);
   }
   .ftw-btn:active { transform: translateX(1px) scale(.99); }
   .ftw-btn:disabled {
@@ -213,7 +219,7 @@ function renyn_asistente_shortcode() {
   }
   .ftw-btn:hover .ftw-btn-chevron {
     color: rgba(255,255,255,.5);
-    transform: translateX(3px);
+    transform: translateX(2px);
   }
 
   /* Descripción por opción — dentro del botón, siempre visible */
@@ -481,12 +487,74 @@ function renyn_asistente_shortcode() {
     animation: ftw-fadein 220ms var(--ease) both;
   }
 
+  /* ── «Cobra vida» — intro + latido en el nodo base (opción E) ──
+     Se dispara al entrar el widget en pantalla estando en "inicio"
+     y se detiene al pulsar una opción (clase gestionada por JS). */
+  #ftw-widget.ftw-vivo-armado { opacity: 0; }
+
+  @keyframes ftw-vivo-entrada {
+    0%   { opacity: 0; transform: scale(.955) translateY(12px); box-shadow: var(--sombra-widget); }
+    55%  { box-shadow: var(--sombra-glow); }
+    100% { opacity: 1; transform: scale(1) translateY(0); box-shadow: var(--sombra-widget); }
+  }
+  @keyframes ftw-vivo-scan {
+    0%   { transform: translateY(0); opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { transform: translateY(var(--scan-h, 460px)); opacity: 0; }
+  }
+  @keyframes ftw-vivo-btn {
+    from { opacity: 0; filter: blur(7px); transform: translateY(7px); }
+    to   { opacity: 1; filter: blur(0);   transform: none; }
+  }
+  @keyframes ftw-vivo-halo {
+    0%   { box-shadow: 0 0 0 0 rgba(220,38,38,.45); }
+    70%  { box-shadow: 0 0 0 10px rgba(220,38,38,0); }
+    100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+  }
+
+  #ftw-widget.ftw-vivo {
+    animation: ftw-vivo-entrada .8s var(--ease-spring) both;
+  }
+  #ftw-widget.ftw-vivo::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 5;
+    background: var(--scan-grad);
+    box-shadow: 0 0 12px var(--red-h);
+    opacity: 0; pointer-events: none;
+    animation: ftw-vivo-scan 1.15s var(--ease) .3s 1;
+  }
+  /* Cascada de botones (blur→foco). `backwards` los oculta durante el
+     retardo pero libera el control al terminar, sin bloquear el :hover. */
+  #ftw-widget.ftw-vivo #ftw-opciones .ftw-btn {
+    animation: ftw-vivo-btn .55s var(--ease) backwards;
+  }
+  #ftw-widget.ftw-vivo #ftw-opciones .ftw-btn:nth-child(2)   { animation-delay: .48s; }
+  #ftw-widget.ftw-vivo #ftw-opciones .ftw-btn:nth-child(3)   { animation-delay: .58s; }
+  #ftw-widget.ftw-vivo #ftw-opciones .ftw-btn:nth-child(n+4) { animation-delay: .68s; }
+  /* Primera opción: cascada + halo pulsante que invita al click */
+  #ftw-widget.ftw-vivo #ftw-opciones .ftw-btn:first-child {
+    animation: ftw-vivo-btn .55s var(--ease) .38s backwards,
+               ftw-vivo-halo 2.2s var(--ease) 1.4s infinite;
+  }
+
+  /* La media query va después y con la misma especificidad que las
+     reglas .ftw-vivo, así que gana por orden de cascada sin !important. */
+  @media (prefers-reduced-motion: reduce) {
+    #ftw-widget.ftw-vivo,
+    #ftw-widget.ftw-vivo::after,
+    #ftw-widget.ftw-vivo #ftw-opciones .ftw-btn,
+    #ftw-widget.ftw-vivo #ftw-opciones .ftw-btn:first-child {
+      animation: none;
+    }
+    #ftw-widget.ftw-vivo-armado { opacity: 1; }
+  }
+
   /* ── Pie de navegación ────────────────────────────────────── */
   #ftw-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 11px 22px;
+    padding: 10px 20px;
     border-top: 1px solid var(--border-subtle);
     background: var(--bg);
   }
@@ -603,7 +671,11 @@ function renyn_asistente_shortcode() {
     --red-border:    rgba(220,38,38,.25);
     --green-bg:      rgba(34,197,94,.08);
     --green-border:  rgba(34,197,94,.22);
-    box-shadow: 0 0 0 1px var(--border-subtle), 0 8px 32px rgba(0,0,0,.1);
+    /* Sombras/glow suavizados y barrido rojo sólido (el blanco no luce sobre claro) */
+    --sombra-widget: 0 0 0 1px var(--border-subtle), 0 3px 14px rgba(0,0,0,.07), 0 0 0 rgba(220,38,38,0);
+    --sombra-glow:   0 0 0 1px var(--red-border), 0 6px 22px rgba(0,0,0,.1), 0 0 40px rgba(220,38,38,.16);
+    --scan-grad:     linear-gradient(90deg, transparent, var(--red) 30%, var(--red-h) 50%, var(--red) 70%, transparent);
+    box-shadow: var(--sombra-widget);
   }
   /* En claro el hover de botón va a rojo oscuro (excluye errores y ninguna que tienen su propio estilo) */
   #ftw-widget.ftw-light .ftw-btn:not(.ftw-btn-errores):not(.ftw-btn-ninguna):not(#ftw-sat-si):hover {
@@ -2116,6 +2188,7 @@ function nodoActualId(){ return historial[historial.length - 1]; }
 function resolverDestino(destino){ return typeof destino === "function" ? destino(contexto) : destino; }
 
 function irANodo(idDestino, textoOpcion){
+  if(nodoActualId() === "inicio") ftwInteractuado = true;
   contexto[nodoActualId()] = { texto: textoOpcion, destino: idDestino };
   historial.push(idDestino);
   renderizar();
@@ -2132,6 +2205,7 @@ function volverAtras(){
 function reiniciar(){
   historial = ["inicio"];
   contexto  = {};
+  ftwInteractuado = false;
   renderizar();
 }
 
@@ -2355,6 +2429,12 @@ function renderizar(){
 
   actualizarBreadcrumb();
   btnAtras.disabled = historial.length <= 1;
+
+  if(nodoActualId() === "inicio" && !ftwInteractuado){
+    ftwArmarVida();
+  } else {
+    ftwDetenerVida();
+  }
 }
 
 /* ── Toggle de tema ─────────────────────────────────────────── */
@@ -2377,6 +2457,43 @@ const prefiereOscuro  = window.matchMedia?.("(prefers-color-scheme: dark)").matc
 aplicarTema(temaGuardado ? temaGuardado === "oscuro" : prefiereOscuro);
 
 btnTema.addEventListener("click", () => aplicarTema(elWidget.classList.contains("ftw-light")));
+
+/* ── «Cobra vida»: intro + latido al llegar al nodo base ──────────
+   Se activa cuando el widget entra en pantalla estando en "inicio".
+   El bucle (respiración + halo) se detiene al pulsar una opción. */
+const FTW_REDUCE_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+let ftwInteractuado = false;
+let ftwEnVista      = false;
+
+function ftwActivarVida(){
+  if(!elWidget.classList.contains("ftw-vivo-armado")) return;
+  elWidget.style.setProperty("--scan-h", `${elWidget.offsetHeight}px`);
+  elWidget.classList.remove("ftw-vivo-armado");
+  void elWidget.offsetWidth;               // reflow: permite re-disparar la intro
+  elWidget.classList.add("ftw-vivo");
+}
+
+function ftwArmarVida(){
+  if(FTW_REDUCE_MOTION) return;
+  elWidget.classList.remove("ftw-vivo");
+  elWidget.classList.add("ftw-vivo-armado");
+  if(ftwEnVista) ftwActivarVida();
+}
+
+function ftwDetenerVida(){
+  elWidget.classList.remove("ftw-vivo", "ftw-vivo-armado");
+}
+
+if(window.IntersectionObserver){
+  new IntersectionObserver(entradas => {
+    entradas.forEach(e => {
+      ftwEnVista = e.isIntersecting;
+      if(e.isIntersecting) ftwActivarVida();
+    });
+  }, { threshold: 0.2 }).observe(elWidget);
+} else {
+  ftwEnVista = true;   // sin soporte: se considera visible para no ocultar el widget
+}
 
 /* Inicialización */
 document.getElementById("ftw-soporte-fijo").href = CONFIG.whatsapp;

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banco de animaciones — Asistente Renyn</title>
+<style>
+
+  /* ============================================================
+     SISTEMA DE DISEÑO — mismos tokens que index.html
+     ============================================================ */
+  :root {
+    --bg:             #09090b;
+    --surface:        #1c1c28;
+    --surface-2:      #222230;
+    --surface-3:      #28283c;
+    --border:         #353552;
+    --border-subtle:  #252538;
+    --text:           #f0f0f6;
+    --text-2:         #8888a8;
+    --text-3:         #4e4e66;
+    --red:            #dc2626;
+    --red-h:          #ef4444;
+    --red-bg:         rgba(220,38,38,.1);
+    --red-border:     rgba(220,38,38,.3);
+    --radius:         18px;
+    --radius-md:      12px;
+    --radius-sm:      9px;
+    --radius-xs:      6px;
+    --pill:           100px;
+    --width:          680px;
+    --ease:           cubic-bezier(.4,0,.2,1);
+    --ease-spring:    cubic-bezier(.34,1.56,.64,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(220,38,38,.05), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
+    padding-bottom: 40vh;
+  }
+
+  /* ── Cabecera de la página demo ──────────────────────────── */
+  .demo-intro {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 24px 24px;
+    text-align: center;
+  }
+  .demo-intro h1 { font-size: 1.5rem; margin: 0 0 10px; }
+  .demo-intro p  { color: var(--text-2); font-size: .95rem; line-height: 1.6; margin: 0 auto; max-width: 560px; }
+  .demo-intro code {
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 5px; font-size: .85em; color: var(--red-h);
+  }
+
+  /* ── Sección de cada animación ───────────────────────────── */
+  .demo-seccion {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+    /* separación grande para que cada widget entre en pantalla por scroll */
+    margin-top: 55vh;
+  }
+  .demo-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .demo-cabecera-txt { min-width: 0; }
+  .demo-etiqueta {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: .7rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    color: var(--red-h); margin-bottom: 8px;
+  }
+  .demo-etiqueta::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--red); box-shadow: 0 0 8px var(--red);
+  }
+  .demo-cabecera h2 { font-size: 1.15rem; margin: 0 0 6px; }
+  .demo-cabecera p  { color: var(--text-2); font-size: .88rem; line-height: 1.55; margin: 0; }
+  .demo-repetir {
+    flex-shrink: 0;
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--surface-2); color: var(--text-2);
+    border: 1px solid var(--border); border-radius: var(--pill);
+    font: 600 .8rem/1 inherit; padding: 9px 15px; cursor: pointer;
+    transition: color 160ms var(--ease), background 160ms var(--ease), border-color 160ms var(--ease);
+  }
+  .demo-repetir:hover { color: #fff; background: var(--red); border-color: var(--red); }
+
+  /* ============================================================
+     WIDGET — subconjunto de estilos de index.html (estado base)
+     ============================================================ */
+  .ftw-widget {
+    position: relative;
+    width: var(--width);
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--border), 0 8px 30px rgba(0,0,0,.5), 0 0 60px rgba(220,38,38,.1);
+    /* origen de transform centrado para escalados orgánicos */
+    transform-origin: center top;
+  }
+  .ftw-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 20px; background: var(--bg); border-bottom: 1px solid var(--border);
+  }
+  .ftw-header-titulo {
+    display: flex; align-items: center; gap: 9px;
+    font-size: .9rem; font-weight: 600; color: var(--text-2); min-width: 0; flex: 1;
+  }
+  .ftw-soporte-fijo {
+    display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+    font-size: .75rem; font-weight: 600; color: var(--text-2);
+    padding: 6px 13px; border-radius: var(--pill); text-decoration: none;
+    border: 1px solid var(--border); background: var(--surface-2); white-space: nowrap;
+  }
+  .ftw-breadcrumb {
+    padding: 8px 20px; font-size: .7rem; font-weight: 500; color: var(--text-3);
+    letter-spacing: .3px; border-bottom: 1px solid var(--border-subtle); min-height: 34px;
+    display: flex; align-items: center;
+  }
+  .ftw-breadcrumb span:last-child { color: var(--text-2); }
+  .ftw-body { padding: 24px 20px 20px; }
+  .ftw-icon {
+    width: 1em; height: 1em; vertical-align: -0.15em; margin-right: 5px;
+    stroke: currentColor; fill: none; flex-shrink: 0;
+  }
+  .ftw-pregunta {
+    font-size: 1.06rem; font-weight: 700; line-height: 1.5; text-align: center;
+    color: var(--text); margin-bottom: 22px;
+    display: flex; align-items: flex-start; justify-content: center; gap: 8px;
+  }
+  .ftw-pregunta .ftw-icon { flex-shrink: 0; margin-top: 3px; color: var(--text-3); margin-right: 0; }
+  .ftw-opciones { display: flex; flex-direction: column; gap: 8px; }
+  .ftw-btn {
+    width: 100%; padding: 13px 18px; background: var(--surface-2); color: var(--text);
+    border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer;
+    font: 600 .93rem/1 inherit; letter-spacing: .1px;
+    display: flex; align-items: flex-start; justify-content: space-between; text-align: left; gap: 12px;
+    transition: background 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease),
+                transform 140ms var(--ease), box-shadow 160ms var(--ease);
+  }
+  .ftw-btn:hover { background: var(--red-bg); border-color: var(--red-border); color: #fff; transform: translateX(2px); }
+  .ftw-btn:active { transform: translateX(1px) scale(.99); }
+  .ftw-btn-inner { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+  .ftw-btn-desc {
+    font-size: .81rem; font-weight: 400; color: var(--text-3); line-height: 1.45;
+    margin-top: 5px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .ftw-btn-chevron { flex-shrink: 0; color: var(--text-3); font-size: 1rem; line-height: 1; margin-top: 2px; }
+  .ftw-btn:hover .ftw-btn-chevron { color: rgba(255,255,255,.5); }
+  .ftw-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 20px; border-top: 1px solid var(--border-subtle); background: var(--bg);
+  }
+  .ftw-footer button {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2);
+    font: 600 .8rem/1 inherit; cursor: pointer; padding: 8px 14px; border-radius: var(--radius-xs);
+  }
+  .ftw-footer button .ftw-icon { margin-right: 0; }
+
+  /* ============================================================
+     ░░░  ANIMACIONES  ░░░
+     Cada tipo es UNA clase que se activa cuando el widget entra
+     en pantalla (se le añade `.activo`). Al pulsar una opción se
+     añade `.interactuado`, que congela los bucles infinitos.
+
+     ► PARA AÑADIR UN TIPO NUEVO:
+       1. Escribe aquí tus @keyframes y las reglas .anim-XXX.activo
+          (y opcionalmente .anim-XXX.interactuado para el estado final).
+       2. Registra el tipo en el array ANIMACIONES del <script> de abajo.
+       Nada más: la sección, el observer y el botón "repetir" se generan solos.
+     ============================================================ */
+
+  /* Estado de arranque común: invisible hasta entrar en pantalla */
+  .ftw-widget.tiene-anim { opacity: 0; }
+  .ftw-widget.tiene-anim.activo { opacity: 1; }
+
+  /* ─────────────────────────────────────────────────────────
+     A · RESPIRACIÓN  —  entrada con resorte + latido suave infinito
+     ───────────────────────────────────────────────────────── */
+  @keyframes anim-resp-entrada {
+    0%   { opacity: 0; transform: scale(.955) translateY(12px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes anim-resp-latido {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.009); }
+  }
+  @keyframes anim-btn-subir {
+    from { opacity: 0; transform: translateY(9px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .anim-respiracion.activo {
+    animation: anim-resp-entrada .7s var(--ease-spring) both,
+               anim-resp-latido 4.2s ease-in-out .8s infinite;
+  }
+  .anim-respiracion.activo .ftw-btn { animation: anim-btn-subir .55s var(--ease) both; }
+  .anim-respiracion.activo .ftw-btn:nth-child(1) { animation-delay: .18s; }
+  .anim-respiracion.activo .ftw-btn:nth-child(2) { animation-delay: .28s; }
+  .anim-respiracion.activo .ftw-btn:nth-child(3) { animation-delay: .38s; }
+  .anim-respiracion.interactuado { animation: none; transform: none; }
+
+  /* ─────────────────────────────────────────────────────────
+     B · ENCENDIDO FUTURISTA  —  sube + latido del glow + barrido
+         de luz por el borde superior + botones desenfocan→enfocan
+     ───────────────────────────────────────────────────────── */
+  @keyframes anim-enc-entrada {
+    0%   { opacity: 0; transform: translateY(26px);
+           box-shadow: 0 0 0 1px var(--border), 0 8px 30px rgba(0,0,0,.5), 0 0 0 rgba(220,38,38,0); }
+    55%  { box-shadow: 0 0 0 1px var(--red-border), 0 8px 30px rgba(0,0,0,.5), 0 0 90px rgba(220,38,38,.4); }
+    100% { opacity: 1; transform: none;
+           box-shadow: 0 0 0 1px var(--border), 0 8px 30px rgba(0,0,0,.5), 0 0 60px rgba(220,38,38,.1); }
+  }
+  @keyframes anim-enc-scan {
+    0%   { transform: translateY(0);    opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { transform: translateY(var(--scan-h, 380px)); opacity: 0; }
+  }
+  @keyframes anim-btn-enfocar {
+    from { opacity: 0; filter: blur(7px); transform: translateY(7px); }
+    to   { opacity: 1; filter: blur(0);   transform: none; }
+  }
+  .anim-encendido::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 5;
+    background: linear-gradient(90deg, transparent, var(--red-h) 20%, #fff 50%, var(--red-h) 80%, transparent);
+    box-shadow: 0 0 12px var(--red-h);
+    opacity: 0; pointer-events: none;
+  }
+  .anim-encendido.activo { animation: anim-enc-entrada .85s var(--ease) both; }
+  .anim-encendido.activo::after { animation: anim-enc-scan 1.15s var(--ease) .25s 1; }
+  .anim-encendido.activo .ftw-btn { animation: anim-btn-enfocar .6s var(--ease) both; }
+  .anim-encendido.activo .ftw-btn:nth-child(1) { animation-delay: .35s; }
+  .anim-encendido.activo .ftw-btn:nth-child(2) { animation-delay: .47s; }
+  .anim-encendido.activo .ftw-btn:nth-child(3) { animation-delay: .59s; }
+
+  /* ─────────────────────────────────────────────────────────
+     C · FOCO MAGNÉTICO  —  se acerca al usuario (escala real +
+         profundidad) al entrar; vuelve a su tamaño al interactuar
+     ───────────────────────────────────────────────────────── */
+  .anim-foco {
+    opacity: 1;
+    transition: transform .6s var(--ease-spring), box-shadow .6s var(--ease);
+  }
+  .anim-foco.activo {
+    transform: scale(1.035);
+    box-shadow: 0 0 0 1px var(--red-border), 0 22px 55px rgba(0,0,0,.6), 0 0 85px rgba(220,38,38,.25);
+  }
+  .anim-foco.interactuado {
+    transform: none;
+    box-shadow: 0 0 0 1px var(--border), 0 8px 30px rgba(0,0,0,.5), 0 0 60px rgba(220,38,38,.1);
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     D · LATIDO EN BOTONES  —  halo rojo pulsante en la 1ª opción
+         que invita a pulsar; se detiene al interactuar
+     ───────────────────────────────────────────────────────── */
+  @keyframes anim-halo {
+    0%   { box-shadow: 0 0 0 0 rgba(220,38,38,.45); border-color: var(--red-border); }
+    70%  { box-shadow: 0 0 0 10px rgba(220,38,38,0); }
+    100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); border-color: var(--border); }
+  }
+  .anim-latido { opacity: 1; }
+  .anim-latido.activo .ftw-opciones .ftw-btn:first-child {
+    animation: anim-halo 2.2s var(--ease) infinite;
+  }
+  .anim-latido.interactuado .ftw-opciones .ftw-btn:first-child { animation: none; }
+
+  /* ─────────────────────────────────────────────────────────
+     E · COMBINADA (A+B+D)  —  la recomendada: entrada orgánica con
+         resorte, barrido de luz futurista, latido suave del conjunto
+         y halo invitador en la primera opción
+     ───────────────────────────────────────────────────────── */
+  .anim-combo::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 5;
+    background: linear-gradient(90deg, transparent, var(--red-h) 20%, #fff 50%, var(--red-h) 80%, transparent);
+    box-shadow: 0 0 12px var(--red-h);
+    opacity: 0; pointer-events: none;
+  }
+  .anim-combo.activo {
+    animation: anim-resp-entrada .75s var(--ease-spring) both,
+               anim-resp-latido 4.2s ease-in-out .9s infinite;
+  }
+  .anim-combo.activo::after { animation: anim-enc-scan 1.15s var(--ease) .3s 1; }
+  .anim-combo.activo .ftw-btn { animation: anim-btn-enfocar .6s var(--ease) both; }
+  .anim-combo.activo .ftw-btn:nth-child(1) { animation-delay: .38s; }
+  .anim-combo.activo .ftw-btn:nth-child(2) { animation-delay: .50s; }
+  .anim-combo.activo .ftw-btn:nth-child(3) { animation-delay: .62s; }
+  .anim-combo.activo .ftw-opciones .ftw-btn:first-child {
+    animation: anim-btn-enfocar .6s var(--ease) .38s both,
+               anim-halo 2.2s var(--ease) 1.3s infinite;
+  }
+  .anim-combo.interactuado { animation: none; transform: none; }
+  .anim-combo.interactuado .ftw-opciones .ftw-btn:first-child { animation: none; }
+
+  /* ── Accesibilidad: sin movimiento si el usuario lo pide ──── */
+  @media (prefers-reduced-motion: reduce) {
+    .ftw-widget.tiene-anim,
+    .ftw-widget.tiene-anim * { animation: none !important; transition: none !important; }
+    .ftw-widget.tiene-anim { opacity: 1 !important; transform: none !important; }
+  }
+
+  @media (max-width: 540px) {
+    .demo-cabecera { flex-direction: column; }
+    .demo-seccion  { margin-top: 45vh; }
+  }
+
+</style>
+</head>
+<body>
+
+  <header class="demo-intro">
+    <h1>Banco de animaciones «cobrar vida»</h1>
+    <p>
+      Haz scroll: cada widget se anima al entrar en pantalla, tal como haría en tu WordPress.
+      El bucle infinito (respiración / halo) se <strong>detiene al pulsar una opción</strong>.
+      Usa <code>Repetir</code> en cada tarjeta para volver a verla sin scrollear.
+    </p>
+  </header>
+
+  <!-- las secciones se generan solas desde el array ANIMACIONES -->
+  <main id="demos"></main>
+
+<script>
+
+  /* ================================================================
+     REGISTRO DE ANIMACIONES
+     ----------------------------------------------------------------
+     Para añadir un tipo nuevo:
+       1) crea sus @keyframes y reglas `.anim-XXX.activo` en el <style>.
+       2) añade una entrada aquí con { clase, nombre, descripcion }.
+     La sección, el widget y el botón "repetir" se crean solos.
+     ================================================================ */
+  const ANIMACIONES = [
+    {
+      clase: "anim-respiracion",
+      nombre: "A · Respiración",
+      descripcion: "Entra con un resorte suave y luego «respira» con un latido de escala casi imperceptible. Los botones aparecen en cascada. Elegante y discreto."
+    },
+    {
+      clase: "anim-encendido",
+      nombre: "B · Encendido futurista",
+      descripcion: "El widget sube, el glow rojo da un latido y una línea de luz recorre el borde superior una vez, como un sistema activándose. Los botones pasan de desenfocados a nítidos."
+    },
+    {
+      clase: "anim-foco",
+      nombre: "C · Foco magnético",
+      descripcion: "Al entrar crece un poco (escala real) y gana profundidad, como si se acercara al usuario. Vuelve a su tamaño en cuanto pulsas una opción."
+    },
+    {
+      clase: "anim-latido",
+      nombre: "D · Latido en botones",
+      descripcion: "Un halo rojo pulsante rodea la primera opción para guiar el ojo hacia dónde pulsar. Se apaga al interactuar."
+    },
+    {
+      clase: "anim-combo",
+      nombre: "E · Combinada (recomendada)",
+      descripcion: "A + B + D juntas: entrada orgánica con resorte, barrido de luz futurista, respiración del conjunto y halo invitador en la primera opción."
+    }
+  ];
+
+  /* Contenido de ejemplo del nodo base (idéntico en estilo al real) */
+  const iconoCamara = `<svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`;
+  const iconoAyuda  = `<svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>`;
+  const iconoAtras  = `<svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>`;
+  const iconoReset  = `<svg class="ftw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`;
+
+  function widgetHTML(clase) {
+    return `
+      <div class="ftw-widget tiene-anim ${clase}">
+        <div class="ftw-header">
+          <span class="ftw-header-titulo">${iconoCamara} Asistente de instalación y configuración</span>
+          <a class="ftw-soporte-fijo" href="#" onclick="return false">¿Necesitas ayuda?</a>
+        </div>
+        <div class="ftw-breadcrumb"><span>Inicio</span></div>
+        <div class="ftw-body">
+          <div class="ftw-pregunta">${iconoAyuda} ¿Qué necesitas hacer?</div>
+          <div class="ftw-opciones">
+            <button class="ftw-btn ftw-btn--has-desc" type="button">
+              <span class="ftw-btn-inner">
+                <span>Instalar mi cámara</span>
+                <span class="ftw-btn-desc">Primera configuración desde cero: hardware, SIM, SD y vinculación con la app.</span>
+              </span>
+              <span class="ftw-btn-chevron">›</span>
+            </button>
+            <button class="ftw-btn ftw-btn--has-desc" type="button">
+              <span class="ftw-btn-inner">
+                <span>Configurar conexión / No me llegan las fotos</span>
+                <span class="ftw-btn-desc">Sin cobertura, error de SIM, APN incorrecto o fotos que no aparecen en la app.</span>
+              </span>
+              <span class="ftw-btn-chevron">›</span>
+            </button>
+            <button class="ftw-btn ftw-btn--has-desc" type="button">
+              <span class="ftw-btn-inner">
+                <span>Tengo un problema / no funciona</span>
+                <span class="ftw-btn-desc">No enciende, no detecta movimiento, no hace fotos o falla de otra forma.</span>
+              </span>
+              <span class="ftw-btn-chevron">›</span>
+            </button>
+          </div>
+        </div>
+        <div class="ftw-footer">
+          <button type="button">${iconoAtras} Paso anterior</button>
+          <button type="button">${iconoReset} Reiniciar asistente</button>
+        </div>
+      </div>`;
+  }
+
+  /* ── Construcción de las secciones desde el registro ─────────── */
+  const cont = document.getElementById("demos");
+  ANIMACIONES.forEach(anim => {
+    const sec = document.createElement("section");
+    sec.className = "demo-seccion";
+    sec.innerHTML = `
+      <div class="demo-cabecera">
+        <div class="demo-cabecera-txt">
+          <div class="demo-etiqueta">${anim.clase}</div>
+          <h2>${anim.nombre}</h2>
+          <p>${anim.descripcion}</p>
+        </div>
+        <button class="demo-repetir" type="button">↻ Repetir</button>
+      </div>
+      ${widgetHTML(anim.clase)}`;
+    cont.appendChild(sec);
+  });
+
+  /* ── Motor: activar al entrar en pantalla, congelar al pulsar ── */
+  const widgets = document.querySelectorAll(".ftw-widget.tiene-anim");
+
+  // ajusta la altura del barrido (scan) al alto real de cada widget
+  function ajustarScan(w) {
+    w.style.setProperty("--scan-h", w.offsetHeight + "px");
+  }
+
+  const io = new IntersectionObserver((entradas) => {
+    entradas.forEach(e => {
+      const w = e.target;
+      if (e.isIntersecting) {
+        ajustarScan(w);
+        w.classList.add("activo");
+      } else if (!w.classList.contains("interactuado")) {
+        // al salir de pantalla, se resetea para poder re-disparar al volver
+        w.classList.remove("activo");
+      }
+    });
+  }, { threshold: 0.45 });
+
+  widgets.forEach(w => {
+    io.observe(w);
+
+    // pulsar cualquier opción del nodo base congela los bucles infinitos
+    w.querySelectorAll(".ftw-opciones .ftw-btn").forEach(btn => {
+      btn.addEventListener("click", () => w.classList.add("interactuado"));
+    });
+
+    // botón "repetir" de la sección: limpia estados y re-dispara
+    const repetir = w.closest(".demo-seccion").querySelector(".demo-repetir");
+    repetir.addEventListener("click", () => {
+      w.classList.remove("activo", "interactuado");
+      ajustarScan(w);
+      void w.offsetWidth;           // fuerza reflow para reiniciar animaciones
+      w.classList.add("activo");
+    });
+  });
+
+</script>
+</body>
+</html>
