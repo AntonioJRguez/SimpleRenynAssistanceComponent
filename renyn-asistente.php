@@ -2,6 +2,9 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function renyn_asistente_shortcode() {
+	static $rendered = false;
+	if ( $rendered ) return '';
+	$rendered = true;
 	return <<<'HTML'
 <style>
 
@@ -725,6 +728,7 @@ function renyn_asistente_shortcode() {
      No necesitas tocar el Bloque 2 (motor) para añadir contenido.
      ================================================================ -->
 <script>
+(function() {
 
 /* ----------------------------------------------------------------
    CONFIG — todos los datos de contacto y URLs en un único lugar.
@@ -732,7 +736,7 @@ function renyn_asistente_shortcode() {
    ---------------------------------------------------------------- */
 const CONFIG = {
   whatsapp:    "https://wa.me/34613052960",
-  email:       "soporte@tudominio.com",
+  email:       "soporte@renynsys.es",
   manualesUrl: "https://renyn.es"
 };
 
@@ -2063,15 +2067,6 @@ const ARBOL = {
 
 };
 
-</script>
-
-<!-- ================================================================
-     BLOQUE 2 — MOTOR DEL ASISTENTE
-     No es necesario tocar este bloque para añadir contenido nuevo.
-     Solo modifícalo para cambiar comportamiento general o añadir
-     un nuevo tipo de nodo (ver instrucciones en Bloque 1).
-     ================================================================ -->
-<script>
 
 /* ----------------------------------------------------------------
    ESTADO DE SESIÓN
@@ -2389,6 +2384,7 @@ btnAtras.addEventListener("click", volverAtras);
 btnReiniciar.addEventListener("click", reiniciar);
 renderizar();
 
+})();
 </script>
 
 HTML;
