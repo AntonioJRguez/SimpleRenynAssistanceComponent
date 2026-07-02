@@ -44,12 +44,23 @@
 
   *, *::before, *::after { box-sizing: border-box; }
 
-  /* ── Contenedor principal ──────────────────────────────────── */
-  #ftw-widget {
-    position: relative;
+  /* ── Envoltorio de referencia para el responsive ───────────────
+     Define el "contenedor" de las container queries: los breakpoints
+     de más abajo reaccionan al ancho de ESTE elemento (= ancho real
+     del widget), no al de la ventana. Así el widget se adapta bien
+     aunque cambies --width o lo incrustes en una columna estrecha. */
+  .ftw-container {
     width: var(--width);
     max-width: 100%;
     margin: 0 auto;
+    container-type: inline-size;
+    container-name: ftw;
+  }
+
+  /* ── Contenedor principal ──────────────────────────────────── */
+  #ftw-widget {
+    position: relative;
+    width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -94,6 +105,8 @@
     text-decoration: none;
     border: 1px solid var(--border);
     background: var(--surface-2);
+    cursor: pointer;
+    font-family: inherit;
     transition: color 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease);
     white-space: nowrap;
   }
@@ -710,10 +723,16 @@
   #ftw-btn-tema:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
   #ftw-btn-tema .ftw-icon { margin: 0; width: 15px; height: 15px; }
 
-  /* ── Responsive ──────────────────────────────────────────────── */
+  /* Variantes cortas de texto: solo visibles en móvil (ver container queries) */
+  .ftw-titulo-corto { display: none; }
+  .ftw-label-corto  { display: none; }
+
+  /* ── Responsive (container queries) ──────────────────────────────
+     Reaccionan al ancho del propio widget (.ftw-container), no al de
+     la ventana. Ver el envoltorio .ftw-container definido arriba. */
 
   /* Tablet / móvil normal: reducir espaciados */
-  @media (max-width: 540px) {
+  @container ftw (max-width: 540px) {
     #ftw-header     { padding: 13px 16px; }
     #ftw-breadcrumb { padding: 7px 16px; font-size: .65rem; }
     #ftw-body       { padding: 22px 16px 18px; }
@@ -724,8 +743,8 @@
   }
 
   /* Móvil estrecho: compactar y colapsar etiquetas */
-  @media (max-width: 420px) {
-    :root { --radius: 16px; --radius-md: 11px; }
+  @container ftw (max-width: 420px) {
+    #ftw-widget     { --radius: 16px; --radius-md: 11px; }
     #ftw-header     { padding: 11px 14px; gap: 8px; }
     #ftw-header-titulo {
       font-size: .82rem;
@@ -733,22 +752,33 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+    /* Título compacto: solo "Asistente" */
+    .ftw-titulo-full { display: none; }
+    .ftw-titulo-corto { display: inline; }
     #ftw-soporte-fijo .ftw-label { display: none; }
-    #ftw-soporte-fijo { padding: 7px 10px; gap: 0; }
+    /* Botón de WhatsApp circular (igual que el de tema) */
+    #ftw-soporte-fijo { width: 40px; height: 40px; padding: 0; gap: 0; justify-content: center; }
+    #ftw-soporte-fijo .ftw-icon { margin-right: 0; width: 18px; height: 18px; }
+    /* Botón de tema más grande */
+    #ftw-btn-tema { width: 40px; height: 40px; }
+    #ftw-btn-tema .ftw-icon { width: 19px; height: 19px; }
     #ftw-breadcrumb { padding: 6px 14px; font-size: .6rem; }
     #ftw-body       { padding: 18px 14px 15px; }
     #ftw-footer     { padding: 8px 14px; }
     #ftw-btn-atras .ftw-label,
     #ftw-btn-reiniciar .ftw-label { display: none; }
     #ftw-footer button  { padding: 7px 10px; }
+    /* Botón "Atrás" más grande y con texto */
+    #ftw-btn-atras { padding: 10px 16px; font-size: .9rem; }
+    #ftw-btn-atras .ftw-label-corto { display: inline; }
     #ftw-pregunta   { font-size: .92rem; margin-bottom: 16px; }
     .ftw-btn        { padding: 11px 13px; font-size: .88rem; }
     .ftw-btn-desc   { font-size: .8rem; }
   }
 
   /* Widget de barra lateral / columna muy estrecha */
-  @media (max-width: 340px) {
-    :root { --radius: 12px; --radius-md: 9px; }
+  @container ftw (max-width: 340px) {
+    #ftw-widget     { --radius: 12px; --radius-md: 9px; }
     #ftw-header-titulo { font-size: .76rem; }
     #ftw-body       { padding: 14px 12px 12px; }
     #ftw-breadcrumb { display: none; }
@@ -759,19 +789,20 @@
 </head>
 <body>
 
+<div class="ftw-container">
 <div id="ftw-widget">
 
   <div id="ftw-header">
     <span id="ftw-header-titulo">
       <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-      Asistente de instalación y configuración
+      <span class="ftw-titulo-full">Asistente de instalación y configuración</span>
+      <span class="ftw-titulo-corto">Asistente</span>
     </span>
     <button type="button" id="ftw-btn-tema" aria-label="Cambiar a modo claro"></button>
-    <!-- biome-ignore lint/a11y/useValidAnchor: href set dynamically by JS -->
-    <a id="ftw-soporte-fijo" href="#" target="_blank" rel="noopener">
+    <button type="button" id="ftw-soporte-fijo">
       <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
       <span class="ftw-label">¿Necesitas ayuda?</span>
-    </a>
+    </button>
   </div>
 
   <div id="ftw-breadcrumb"></div>
@@ -784,6 +815,7 @@
     <button type="button" id="ftw-btn-atras">
       <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
       <span class="ftw-label">Paso anterior</span>
+      <span class="ftw-label-corto">Atrás</span>
     </button>
     <button type="button" id="ftw-btn-reiniciar">
       <svg class="ftw-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -791,6 +823,7 @@
     </button>
   </div>
 
+</div>
 </div>
 
 <!-- ================================================================
@@ -806,7 +839,7 @@
    ---------------------------------------------------------------- */
 const CONFIG = {
   whatsapp:    "https://wa.me/34613052960",
-  email:       "soporte@tudominio.com",
+  email:       "soporte@renynsys.es",
   manualesUrl: "https://renyn.es"
 };
 
@@ -2503,7 +2536,7 @@ if(window.IntersectionObserver){
 }
 
 /* Inicialización */
-document.getElementById("ftw-soporte-fijo").href = CONFIG.whatsapp;
+document.getElementById("ftw-soporte-fijo").addEventListener("click", () => irANodo("soporte_directo", "Soporte"));
 btnAtras.addEventListener("click", volverAtras);
 btnReiniciar.addEventListener("click", reiniciar);
 renderizar();

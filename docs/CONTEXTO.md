@@ -3,14 +3,36 @@
 ## Qué es
 Un widget interactivo tipo "árbol de decisiones" (preguntas con botones, estilo encuesta guiada) para insertar en WordPress vía **WPCode** como snippet HTML independiente. Ayuda al cliente a instalar/configurar sus cámaras de fototrampeo sin necesidad de contactar con soporte, salvo que sea necesario.
 
+## Dos archivos espejo — REGLA IMPORTANTE
+
+El proyecto mantiene **dos archivos que deben ser siempre equivalentes** (mismo widget, mismo aspecto y mismo comportamiento):
+
+- **`index.html`**: versión para abrir/probar en el navegador. Envoltorio HTML completo (`<!DOCTYPE html><html><head><title>…</style>…<body>…</script></body></html>`), con el código repartido en **dos bloques `<script>`** (BLOQUE 1 — DATOS y BLOQUE 2 — MOTOR).
+- **`renyn-asistente.php`**: versión para **copiar y pegar en un componente de Elementor vía WPCode** (shortcode `[renyn_asistente]`). El mismo CSS + HTML + JS va dentro de un heredoc `<<<'HTML' … HTML;` en la función `renyn_asistente_shortcode()`, y el JS va envuelto en una IIFE `(function(){ … })();` en un único `<script>`. Sin `<!DOCTYPE>`, `<head>` ni `<body>`.
+
+**Regla de edición**: cualquier cambio en el widget (estilos, árbol, textos, lógica, iconos, CONFIG…) debe aplicarse **a los dos archivos a la vez**, de modo que el resultado renderizado sea idéntico. Solo pueden diferir en el envoltorio descrito arriba:
+
+| Aspecto | `index.html` | `renyn-asistente.php` |
+|---|---|---|
+| Cabecera/pie | `<!DOCTYPE>`, `<head>`, `<title>`, `<body>`, `</body></html>` | Envoltorio PHP + heredoc `<<<'HTML' … HTML;` + `add_shortcode` |
+| Bloques de script | Dos `<script>` separados (DATOS / MOTOR) con comentario separador | Un solo `<script>` con IIFE `(function(){…})();` |
+| Contenido (CSS, ARBOL, textos, CONFIG, funciones) | **idéntico** | **idéntico** |
+
+**`renyn-asistente.php` no cambia de propósito**: sigue siendo el que se copia tal cual en WPCode/Elementor. `index.html` es solo para desarrollo y previsualización local.
+
+---
+
 ## Stack técnico
-- **Un único archivo HTML autocontenido** (HTML + CSS + JavaScript vanilla, sin frameworks ni dependencias externas).
+- **Dos archivos espejo autocontenidos** (`index.html` y `renyn-asistente.php`) con HTML + CSS + JavaScript vanilla, sin frameworks ni dependencias externas. Ver la regla de equivalencia arriba.
 - Sin llamadas a APIs externas, sin librerías de CDN, sin fuentes externas (se usa una pila de fuentes de sistema: `Poppins, Century Gothic, Futura, Verdana, sans-serif`).
 - Los iconos son **SVG inline** (no `<img>` con URLs externas).
 - Pensado para pegarse directamente en un snippet de tipo "HTML" en WPCode (las etiquetas `<!DOCTYPE html><html><head>` y `</body></html>` se pueden quitar si WPCode da problemas con ellas).
 
 ## Estética
-Diseño dark mode: fondo `#0e0e0e`, bordes redondeados grandes (25px en el contenedor, 50px en botones tipo píldora), botones blancos con texto en negrita (`font-weight:700`), acentos en **rojo** (`#c0392b` / hover `#e74c3c`) para los hovers de botones, y naranja (`#ff6a3d`) reservado específicamente para las cajas de "rama pendiente de creación". Ancho fijo configurable vía variable CSS `--ancho-widget` (actualmente 520px, con `max-width:100%` para que sea responsive en móvil).
+Diseño dark mode: fondo `#0e0e0e`, bordes redondeados grandes (25px en el contenedor, 50px en botones tipo píldora), botones blancos con texto en negrita (`font-weight:700`), acentos en **rojo** (`#c0392b` / hover `#e74c3c`) para los hovers de botones, y naranja (`#ff6a3d`) reservado específicamente para las cajas de "rama pendiente de creación". Ancho configurable vía variable CSS `--width` (actualmente 680px, con `max-width:100%`).
+
+### Responsive por container queries
+El widget se adapta a **su propio ancho**, no al de la ventana. El markup envuelve `#ftw-widget` en un `.ftw-container` con `container-type: inline-size` (`container-name: ftw`), y los breakpoints son `@container ftw (max-width: 540px / 420px / 340px)`. Esto hace que el modo compacto (menos padding, ocultar etiquetas de botones, breadcrumb, etc.) se active correctamente aunque el widget se incruste en una columna estrecha de Elementor o se cambie `--width`, sin depender del ancho del viewport. Las overrides de variables (`--radius`, `--radius-md`) dentro de las container queries se aplican sobre `#ftw-widget` (no sobre `:root`, que queda fuera del contenedor).
 
 ### Mejoras de estilo aplicadas
 - **Animación fade-in + slide-up (200ms)** al navegar entre nodos (CSS puro, reflow forzado para que se repita en cada transición).

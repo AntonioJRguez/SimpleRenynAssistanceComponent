@@ -27,3 +27,6 @@ Thumbs.db
 .claude/
 .mcp/
 .claude-dev/
+
+# Propuestas del chatbot: documentación informativa, no se sube (queda solo en local)
+docs/PROPUESTA-*.txt
